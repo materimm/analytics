@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <!-- Custom stylesheet -->
+  <link href="{{ url_for('static', filename='css/radar.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+  <h1>Player</h1>
+  <!-- <div class="player_score">{{player_stats}}</div> -->
+
+  <table>
+    <thead>
+        <tr>
+          <th>Overall Rank</th>
+          <th>Name</th>
+          <th>Team</th>
+          <th>Position</th>
+          <th>Score</th>
+          <th>xGF</th>
+          <th>xGF Rank</th>
+          <th>xGA</th>
+          <th>xGA Rank</th>
+          <th>Corsi</th>
+          <th>Corsi Rank</th>
+          <th>Faceoff %</th>
+          <th>Faceoff Rank</th>
+          <th>Shooting %</th>
+          <th>Shooting % Rank</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in player_stats %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{player.name}}</td>
+            <td>{{player.team}}</td>
+            <td>{{player.position}}</td>
+            <td>{{player.score}}</td>
+            <td>{{player.xGF}}</td>
+            <td>{{player.xGF_rank}}</td>
+            <td>{{player.xGA}}</td>
+            <td>{{player.xGA_rank}}</td>
+            <td>{{player.corsi}}</td>
+            <td>{{player.corsi_rank}}</td>
+            <td>{{player.FO_percent}}</td>
+            <td>{{player.FO_percent_rank}}</td>
+            <td>{{player.shooting_percent}}</td>
+            <td>{{player.shooting_percent_rank}}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/radar.js') }}"></script>
+{% endblock %}
