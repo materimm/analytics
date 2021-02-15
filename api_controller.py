@@ -8,7 +8,7 @@ def upload_data(file_path):
 
 
 def get_team_pdos():
-    file_path = r'C:\Users\MoreyMATERISE\Documents\NHL\moneypuck\20-21-teams.csv'
+    file_path = r'C:\Users\MoreyMATERISE\Documents\analytics_dev\moneypuck\20-21-teams.csv'
     data = upload_data(file_path)
     team_pdos = []
 
@@ -34,7 +34,7 @@ def get_team_pdos():
 
 def get_player_stats():
     players = ["Jack Eichel", "Connor McDavid", "Auston Matthews"]
-    file_path = r'C:\Users\MoreyMATERISE\Documents\NHL\moneypuck\19-20-skaters.csv'
+    file_path = r'C:\Users\MoreyMATERISE\Documents\analytics_dev\moneypuck\19-20-skaters.csv'
     data = upload_data(file_path)
     league_corsi = []
     league_faceoff_percent = []
@@ -74,8 +74,8 @@ def get_player_stats():
             player_stats = {}
             player_stats["name"] = r.get("name")
             player_stats["team"] = r.get("team")
-            
-            position = r.get("position")
+
+            position = r.get("position").strip()
             if position == "L":
                 position = "Left Wing"
             elif position == "R":
