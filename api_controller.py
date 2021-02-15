@@ -3,6 +3,7 @@ import bisect
 import NFL_apis as nfl
 
 
+
 def upload_data(file_path):
     data = pd.read_csv(file_path)
     return data;

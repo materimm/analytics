@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Game data</h1>
+  <button onclick="shots_pie_chart({{shots}})">shots chart</button>
+  <div id="shots"></div>
+
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nhl_game.js') }}"></script>
+{% endblock %}

@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 import api_controller as api
+import nhl_game_scraper as ngs
 
 app = Flask(__name__)
 
@@ -27,3 +28,9 @@ def player_score():
 def nfl():
     qbs = api.get_epa(2020)
     return render_template('nfl.html', **locals())
+
+@app.route('/nhl_game', methods=['GET'])
+def nhl_game():
+    #qbs = api.get_epa(2020)
+    shots = ngs.get_shots()
+    return render_template('nhl_game.html', **locals())
