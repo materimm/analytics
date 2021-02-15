@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="{{ url_for('static', filename='images/chat_logo.ico') }}">
 
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/vendor/bootstrap.min.css') }}" rel="stylesheet">
+
     <!-- d3 import -->
     <script src="https://d3js.org/d3.v4.js"></script>
 
@@ -22,8 +25,11 @@
     </div>
 
     {% block scripts %}
-    <!-- d3 import -->
+    <!-- JS vendor imports -->
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="{{ url_for('static', filename='js/vendor/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
     {% endblock %}
   </body>
 </html>

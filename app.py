@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 import api_controller as api
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,3 +22,8 @@ def radar():
 def player_score():
     player_stats = api.get_player_stats()
     return render_template('player_score.html', **locals())
+
+@app.route('/nfl', methods=['GET'])
+def nfl():
+    qbs = api.get_epa(2020)
+    return render_template('nfl.html', **locals())

@@ -1,0 +1,415 @@
+/*Cardinals*/
+.bg_ari_primary {
+  background-color: #97233F
+}
+
+.bg_ari_secondary {
+  background-color: #000000
+}
+
+.bg_ari_tertiary {
+  background-color: #FFB612
+}
+
+/*Falcons*/
+.bg_atl_primary {
+  background-color: #A71930
+}
+
+.bg_atl_secondary {
+  background-color: #000000
+}
+
+.bg_atl_tertiary {
+  background-color: #A5ACAF
+}
+
+/*Ravens*/
+.bg_bal_primary {
+  background-color: #241773
+}
+
+.bg_bal_secondary {
+  background-color: #9E7C0C
+}
+
+.bg_bal_tertiary {
+  background-color: #000000
+}
+
+/*Bills*/
+.bg_buf_primary {
+  background-color: #00338D
+}
+
+.bg_buf_secondary {
+  background-color: #C60C30
+}
+
+.bg_buf_tertiary {
+  background-color: #ffffff
+}
+
+/*Panthers*/
+.bg_car_primary {
+  background-color: #0085CA
+}
+
+.bg_car_secondary {
+  background-color: #101820
+}
+
+.bg_car_tertiary {
+  background-color: #BFC0BF
+}
+
+/*Bears*/
+.bg_chi_primary {
+  background-color: #0B162A
+}
+
+.bg_chi_secondary {
+  background-color: #C83803
+}
+
+.bg_chi_tertiary {
+  background-color: #ffffff
+}
+
+/*Bengals*/
+.bg_cin_primary {
+  background-color: #FB4F14
+}
+
+.bg_cin_secondary {
+  background-color: #000000
+}
+
+.bg_cin_tertiary {
+  background-color: #ffffff
+}
+
+/*Browns*/
+.bg_cle_primary {
+  background-color: #311D00
+}
+
+.bg_cle_secondary {
+  background-color: #FF3C00
+}
+
+.bg_cle_tertiary {
+  background-color: #ffffff
+}
+
+/*Cowboys*/
+.bg_dal_primary {
+  background-color: #041E42
+}
+
+.bg_dal_secondary {
+  background-color: #869397
+}
+
+.bg_dal_tertiary {
+  background-color: #003594
+}
+
+/*Broncos*/
+.bg_den_primary {
+  background-color: #FB4F14
+}
+
+.bg_den_secondary {
+  background-color: #002244
+}
+
+.bg_den_tertiary {
+  background-color: #ffffff
+}
+
+/*Lions*/
+.bg_det_primary {
+  background-color: #0076B6
+}
+
+.bg_det_secondary {
+  background-color: #B0B7BC
+}
+
+.bg_det_tertiary {
+  background-color: #ffffff
+}
+
+/*Packers*/
+.bg_gb_primary {
+  background-color: #203731
+}
+
+.bg_gb_secondary {
+  background-color: #FFB612
+}
+
+.bg_gb_tertiary {
+  background-color: #ffffff
+}
+
+/*Texans*/
+.bg_hou_primary {
+  background-color: #03202F
+}
+
+.bg_hou_secondary {
+  background-color: #A71930
+}
+
+.bg_hou_tertiary {
+  background-color: #ffffff
+}
+
+/*Colts*/
+.bg_ind_primary {
+  background-color: #002C5F
+}
+
+.bg_ind_secondary {
+  background-color: #ffffff
+}
+
+.bg_ind_tertiary {
+  background-color: #A2AAAD
+}
+
+/*Jaguars*/
+.bg_jax_primary {
+  background-color: #006778
+}
+
+.bg_jax_secondary {
+  background-color: #D7A22A
+}
+
+.bg_jax_tertiary {
+  background-color: #101820
+}
+
+/*Chiefs*/
+.bg_kc_primary {
+  background-color: #E31837
+}
+
+.bg_kc_secondary {
+  background-color: #FFB81C
+}
+
+.bg_kc_tertiary {
+  background-color: #ffffff
+}
+
+/*Chargers*/
+.bg_lac_primary {
+  background-color: #FFC20E
+}
+
+.bg_lac_secondary {
+  background-color: #002A5E
+}
+
+.bg_lac_tertiary {
+  background-color: #0080C6
+}
+
+/*Rams*/
+.bg_lar_primary {
+  background-color: #003594
+}
+
+.bg_lar_secondary {
+  background-color: #FFA300
+}
+
+.bg_lar_tertiary {
+  background-color: #ffffff
+}
+
+/*Dolphins*/
+.bg_mia_primary {
+  background-color: #008E97
+}
+
+.bg_mia_secondary {
+  background-color: #FC4C02
+}
+
+.bg_mia_tertiary {
+  background-color: #ffffff
+}
+
+/*Vikings*/
+.bg_min_primary {
+  background-color: #4F2683
+}
+
+.bg_min_secondary {
+  background-color: #FFC62F
+}
+
+.bg_min_tertiary {
+  background-color: #ffffff
+}
+
+/*Patriots*/
+.bg_ne_primary {
+  background-color: #002244
+}
+
+.bg_ne_secondary {
+  background-color: #C60C30
+}
+
+.bg_ne_tertiary {
+  background-color: #B0B7BC
+}
+
+/*Saints*/
+.bg_no_primary {
+  background-color: #D3BC8D
+}
+
+.bg_no_secondary {
+  background-color: #101820
+}
+
+.bg_no_tertiary {
+  background-color: #ffffff
+}
+
+/*Giants*/
+.bg_nyg_primary {
+  background-color: #0B2265
+}
+
+.bg_nyg_secondary {
+  background-color: #A71930
+}
+
+.bg_nyg_tertiary {
+  background-color: #A5ACAF
+}
+
+/*Jets*/
+.bg_nyj_primary {
+  background-color: #125740
+}
+
+.bg_nyj_secondary {
+  background-color: #ffffff
+}
+
+.bg_nyj_tertiary {
+  background-color: #000000
+}
+
+/*Raiders*/
+.bg_lvr_primary {
+  background-color: #000000
+}
+
+.bg_lvr_secondary {
+  background-color: #A5ACAF
+}
+
+.bg_lvr_tertiary {
+  background-color: #ffffff
+}
+
+/*Eagles*/
+.bg_phi_primary {
+  background-color: #004C54
+}
+
+.bg_phi_secondary {
+  background-color: #A5ACAF
+}
+
+.bg_phi_tertiary {
+  background-color: #ffffff
+}
+
+/*Steelers*/
+.bg_pit_primary {
+  background-color: #FFB612
+}
+
+.bg_pit_secondary {
+  background-color: #101820
+}
+
+.bg_pit_tertiary {
+  background-color: #ffffff
+}
+
+/*49ers*/
+.bg_sf_primary {
+  background-color: #AA0000
+}
+
+.bg_sf_secondary {
+  background-color: #B3995D
+}
+
+.bg_sf_tertiary {
+  background-color: #ffffff
+}
+
+/*Seahawks*/
+.bg_sea_primary {
+  background-color: #002244
+}
+
+.bg_sea_secondary {
+  background-color: #69BE28
+}
+
+.bg_sea_tertiary {
+  background-color: #A5ACAF
+}
+
+/*Buccaneers*/
+.bg_tb_primary {
+  background-color: #D50A0A
+}
+
+.bg_tb_secondary {
+  background-color: #FF7900
+}
+
+.bg_tb_tertiary {
+  background-color: #0A0A08
+}
+
+/*Titans*/
+.bg_ten_primary {
+  background-color: #0C2340
+}
+
+.bg_ten_secondary {
+  background-color: #4B92DB
+}
+
+.bg_ten_tertiary {
+  background-color: #C8102E
+}
+
+/*Football Team*/
+.bg_wft_primary {
+  background-color: #773141
+}
+
+.bg_wft_secondary {
+  background-color: #FFB612
+}
+
+.bg_wft_tertiary {
+  background-color: #ffffff
+}

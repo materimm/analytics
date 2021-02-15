@@ -1,8 +1,6 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import os
-import urllib.request
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+
+
 
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 300)
@@ -34,11 +32,17 @@ def get_EPA(season):
     qbs = qbs.round(2)
 
     #Rename columns
-    qbs.columns = ['Player','Team','EPA per Dropback','CPOE','Dropbacks']
+    qbs.columns = ['Player','Team','EPA','CPOE','Dropbacks']
+    qbs.reset_index(drop=True, inplace=True)
 
-    print(str(qbs))
+    qb_list = []
+    for row in qbs.iterrows():
+        index, player_obj = row
+        qb_list.append(player_obj.to_dict())
 
-    return qbs
+    #print(str(qb_list))
+
+    return qb_list
 
 
 

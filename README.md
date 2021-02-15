@@ -5,7 +5,8 @@ Playing around with sports analytics and visualization
 ## pages:  ##
 /pdo  
 /radar  
-/player_score  
+/player_score
+/nfl  
 
 
 ## To start server:  ##

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <!-- Custom stylesheet -->
+  <link href="{{ url_for('static', filename='css/radar.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+  <h1>QBs</h1>
+
+  <table class="table table-sm table-hover">
+    <thead class="thead-dark">
+        <tr>
+          <th scope="col">Overall Rank</th>
+          <th scope="col">Name</th>
+          <th scope="col">Team</th>
+          <th scope="col">EPA</th>
+          <th scope="col">CPOE</th>
+          <th scope="col">Dropbacks</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for qb in qbs %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{qb.Player}}</td>
+            <td>{{qb.Team}}</td>
+            <td>{{qb.EPA}}</td>
+            <td>{{qb.CPOE}}</td>
+            <td>{{qb.Dropbacks}}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+{% endblock %}

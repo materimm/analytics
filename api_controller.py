@@ -1,5 +1,6 @@
 import pandas as pd
 import bisect
+import NFL_apis as nfl
 
 
 def upload_data(file_path):
@@ -107,3 +108,7 @@ def get_player_stats():
     player_scores = sorted(player_scores, key = lambda i: i["score"])
     #print(str(player_scores))
     return player_scores
+
+
+def get_epa(season):
+    return nfl.get_EPA(season)
