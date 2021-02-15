@@ -31,6 +31,7 @@ def nfl():
 
 @app.route('/nhl_game', methods=['GET'])
 def nhl_game():
-    #qbs = api.get_epa(2020)
-    shots = ngs.get_shots()
+    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
+    url="https://www.espn.com/nhl/playbyplay/_/gameId/401272337"
+    shots = ngs.get_shots(url)
     return render_template('nhl_game.html', **locals())

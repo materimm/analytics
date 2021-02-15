@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
 
-def get_shots():
+def get_shots(url):
     home_shots = 0
     away_shots = 0
-    home_roster, home_team_name, away_roster, away_team_name = get_roster()
+    home_roster, home_team_name, away_roster, away_team_name = get_roster(url)
 
     driver = webdriver.Chrome("./chromedriver")
     #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272098"
-    url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
+    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
     driver.get(url)
 
 
@@ -61,6 +61,7 @@ def get_shots():
         away_shots += a
         #print("========================================")
 
+    driver.quit()
     obj = {
         "home": {
             "name": home_team_name,
@@ -126,17 +127,17 @@ def get_shots_web_reader(soup, home_roster, away_roster):
 
 
 
-def get_roster():
-    home_players, home_team_name = get_players("ShotChartControls__team--home")
-    away_players, away_team_name = get_players("ShotChartControls__team--away")
+def get_roster(url):
+    home_players, home_team_name = get_players(url, "ShotChartControls__team--home")
+    away_players, away_team_name = get_players(url, "ShotChartControls__team--away")
 
     return home_players, home_team_name, away_players, away_team_name
 
 
-def get_players(class_to_find):
+def get_players(url, class_to_find):
     players = []
     #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272098"
-    url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
+    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
     shots = soup.find(class_=class_to_find)
@@ -160,4 +161,5 @@ def get_players(class_to_find):
 
 
 #if __name__ == '__main__':
-    #get_shots()
+    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
+    #get_shots(https://www.espn.com/nhl/playbyplay/_/gameId/401272216)
