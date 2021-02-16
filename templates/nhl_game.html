@@ -6,9 +6,18 @@
   <h1>Game data</h1>
   <button onclick="shots_pie_chart({{game_obj}})">shots chart</button>
   <button onclick="shot_flow_chart({{game_obj}})">shots flow</button>
-  <div id="shots"></div>
-  <div id="shot_flow">
-    <canvas id="myChart"></canvas>
+  <button onclick="shots_per_60_chart({{game_obj.shots_per_60}})">shots per 60</button>
+
+  <div id="shots" style="width:50%;">
+    <canvas id="shots_chart"></canvas>
+  </div>
+
+  <div id="shot_flow" style="width:75%;">
+    <canvas id="shot_flow_chart"></canvas>
+  </div>
+  
+  <div id="shots_per_60" style="width:75%;" >
+    <canvas id="shots_per_60_chart"></canvas>
   </div>
 
 {% endblock %}

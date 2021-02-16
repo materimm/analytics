@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
+import json
 
 def get_shots(url):
     home_shots = 0
@@ -9,8 +10,6 @@ def get_shots(url):
     home_roster, home_team_name, away_roster, away_team_name = get_roster(url)
 
     driver = webdriver.Chrome("./chromedriver")
-    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272098"
-    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
     driver.get(url)
 
     html = driver.page_source
@@ -22,7 +21,7 @@ def get_shots(url):
 
     #1st period
     if num_periods >= 1:
-        h, a, shot_flow, shot_flow_time = get_shots_web_reader(soup, home_roster, away_roster)
+        h, a, shot_flow, shot_flow_time, shots_per_60 = get_shots_web_reader(soup, home_roster, away_roster)
         home_shots += h
         away_shots += a
         #print("========================================")
@@ -33,6 +32,7 @@ def get_shots(url):
         button.click()
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
+        #TODO add new returns
         h, a = get_shots_web_reader(soup, home_roster, away_roster)
         home_shots += h
         away_shots += a
@@ -61,17 +61,23 @@ def get_shots(url):
         #print("========================================")
 
     driver.quit()
+
+    home_colors, away_colors = get_team_colors(home_team_name, away_team_name)
+
     obj = {
         "home": {
             "name": home_team_name,
-            "shots": home_shots
+            "shots": home_shots,
+            "colors": home_colors
         },
         "away": {
             "name": away_team_name,
-            "shots": away_shots
+            "shots": away_shots,
+            "colors": away_colors
         },
         "shot_flow": shot_flow,
-        "shot_flow_time": shot_flow_time
+        "shot_flow_time": shot_flow_time,
+        "shots_per_60" : shots_per_60
     }
 
     #print(str(obj))
@@ -84,6 +90,10 @@ def get_shots_web_reader(soup, home_roster, away_roster):
     shot_flow = 0
     shot_flow_list = [0]
     shot_flow_time = [0]
+    home_shots_per_60 =[0]
+    away_shots_per_60 =[0]
+    home_shots_per_60_time =[0]
+    away_shots_per_60_time =[0]
 
     all_plays = soup.find_all(class_="playByPlay__tableRow")
     for play in all_plays:
@@ -115,20 +125,46 @@ def get_shots_web_reader(soup, home_roster, away_roster):
             if shooter in home_roster:
                 home_shots += 1
                 shot_flow += 1
+                home_shots_per_60.append(round((home_shots*60*60) / time_in_seconds))
+                home_shots_per_60_time.append(time_in_seconds)
             elif shooter in away_roster:
                 away_shots += 1
                 shot_flow -=1
+                away_shots_per_60.append(round((away_shots*60*60) / time_in_seconds))
+                away_shots_per_60_time.append(time_in_seconds)
             else:
                 print("ERROR -- shooter not in either roster----------------------------------")
 
             shot_flow_list.append(shot_flow)
             shot_flow_time.append(time_in_seconds)
 
-    #shot_flow_list = shot_flow_list.reverse()
-    #shot_flow_time = shot_flow_time.reverse()
+    #get shots per 60 at end of period
+    home_shots_per_60.append(round((home_shots*60*60) / (20*60)))
+    home_shots_per_60_time.append(20*60)
+    away_shots_per_60.append(round((away_shots*60*60) / (20*60)))
+    away_shots_per_60_time.append(20*60)
 
-    return home_shots, away_shots, shot_flow_list, shot_flow_time
+    shots_per_60 = {
+        "home_shots_per_60" : home_shots_per_60,
+        "home_shots_per_60_time" : home_shots_per_60_time,
+        "away_shots_per_60" : away_shots_per_60,
+        "away_shots_per_60_time" : away_shots_per_60_time
+    }
 
+    return home_shots, away_shots, shot_flow_list, shot_flow_time, shots_per_60
+
+
+def get_team_colors(home_team_name, away_team_name):
+    with open('./static/json/team_abbrevs.json') as teams_file:
+        teams = json.load(teams_file)
+    with open('./static/json/nhl_team_colors.json') as colors_file:
+        colors = json.load(colors_file)
+    home_abbrev = teams[home_team_name]
+    away_abbrev = teams[away_team_name]
+    home_colors = colors[home_abbrev]
+    away_colors = colors[away_abbrev]
+
+    return home_colors, away_colors
 
 
 def get_roster(url):
