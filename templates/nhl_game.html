@@ -4,8 +4,12 @@
 {% endblock %}
 {% block content %}
   <h1>Game data</h1>
-  <button onclick="shots_pie_chart({{shots}})">shots chart</button>
+  <button onclick="shots_pie_chart({{game_obj}})">shots chart</button>
+  <button onclick="shot_flow_chart({{game_obj}})">shots flow</button>
   <div id="shots"></div>
+  <div id="shot_flow">
+    <canvas id="myChart"></canvas>
+  </div>
 
 {% endblock %}
 {% block scripts %}

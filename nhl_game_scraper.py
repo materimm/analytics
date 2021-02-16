@@ -13,17 +13,16 @@ def get_shots(url):
     #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
     driver.get(url)
 
-
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     play_by_play_section = soup.find(class_="Card--PlayByPlay")
     buttons = play_by_play_section.find_all("button")
     num_periods = len(buttons)
-    #num_periods = 1
+    num_periods = 1
 
     #1st period
     if num_periods >= 1:
-        h, a = get_shots_web_reader(soup, home_roster, away_roster)
+        h, a, shot_flow, shot_flow_time = get_shots_web_reader(soup, home_roster, away_roster)
         home_shots += h
         away_shots += a
         #print("========================================")
@@ -70,7 +69,9 @@ def get_shots(url):
         "away": {
             "name": away_team_name,
             "shots": away_shots
-        }
+        },
+        "shot_flow": shot_flow,
+        "shot_flow_time": shot_flow_time
     }
 
     #print(str(obj))
@@ -80,20 +81,21 @@ def get_shots(url):
 def get_shots_web_reader(soup, home_roster, away_roster):
     home_shots = 0
     away_shots = 0
+    shot_flow = 0
+    shot_flow_list = [0]
+    shot_flow_time = [0]
 
     all_plays = soup.find_all(class_="playByPlay__tableRow")
     for play in all_plays:
         play_txt = play.find(class_="playByPlay__text").text
-        #print(str(play_txt))
+        play_time = play.find(class_="playByPlay__time").text
+        time_split = play_time.split(":")
+        time_in_seconds = 60 * int(time_split[0]) + int(time_split[1])
+
+        shooter = ""
         if play_txt.startswith('Shot on goal'):
             s = re.search('Shot on goal by (.*) saved by*', play_txt)
             shooter = s.group(1)
-            if shooter.strip() in home_roster:
-                home_shots += 1
-            elif shooter in away_roster:
-                away_shots += 1
-            else:
-                print("ERROR -- shooter not in either roster----------------------------------")
         elif play_txt.startswith('Goal scored'):
             s = re.search('Goal scored by (.*) assisted by*', play_txt)
             if s == None: #unassisted
@@ -101,12 +103,6 @@ def get_shots_web_reader(soup, home_roster, away_roster):
                 shooter = s.group(1)
             else:
                 shooter = s.group(1)
-            if shooter.strip() in home_roster:
-                home_shots += 1
-            elif shooter in away_roster:
-                away_shots += 1
-            else:
-                print("ERROR -- shooter not in either roster----------------------------------")
         elif play_txt.startswith('Power Play Goal'):
             s = re.search('Power Play Goal Scored  by (.*) assisted by*', play_txt)
             if s == None: #unassisted
@@ -114,16 +110,24 @@ def get_shots_web_reader(soup, home_roster, away_roster):
                 shooter = s.group(1)
             else:
                 shooter = s.group(1)
-            if shooter.strip() in home_roster:
+
+        if shooter != "":
+            if shooter in home_roster:
                 home_shots += 1
+                shot_flow += 1
             elif shooter in away_roster:
                 away_shots += 1
+                shot_flow -=1
             else:
                 print("ERROR -- shooter not in either roster----------------------------------")
 
+            shot_flow_list.append(shot_flow)
+            shot_flow_time.append(time_in_seconds)
 
-    return home_shots, away_shots
+    #shot_flow_list = shot_flow_list.reverse()
+    #shot_flow_time = shot_flow_time.reverse()
 
+    return home_shots, away_shots, shot_flow_list, shot_flow_time
 
 
 
@@ -161,5 +165,5 @@ def get_players(url, class_to_find):
 
 
 #if __name__ == '__main__':
-    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
-    #get_shots(https://www.espn.com/nhl/playbyplay/_/gameId/401272216)
+#    url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
+#    print(str(get_shots(url)))
