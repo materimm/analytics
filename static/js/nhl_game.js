@@ -66,6 +66,19 @@ function shots_per_60_chart(shots_per_60_obj) {
         pointStrokeColor: "#002D80",
         data: shots_per_60_obj.home_shots_per_60,
       }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          ticks: {min: 0, max: 20*60, stepSize: 2*60,
+              callback: function(label, index, labels) {
+                var min = Math.floor(label/60);
+                var sec = label - min * 60;
+                sec = sec == 0 ? "00" : sec;
+                return min + ":" + sec;
+              }}
+        }]
+      }
     }
   });
 }
@@ -83,10 +96,6 @@ function shots_pie_chart(shots) {
             hexToRgbA(shots.home.colors[0], 0.7),
 						hexToRgbA(shots.away.colors[0], 0.7)
 					],
-          // borderColor: [
-          //   shots.home.colors[0],
-					// 	shots.away.colors[0],
-          // ],
 					label: 'Home vs Away shots'
 				}],
 				labels: [

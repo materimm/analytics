@@ -1,5 +1,6 @@
 #Custom ignore
 NFLData/
+NHLData/
 static/css/vendor/
 static/js/vendor/
 *.exe

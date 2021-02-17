@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <h1>Team data</h1>
+  </div>
+  <div class="row">
+    <button onclick="team_radar({{ team_obj }})">Team Radar</button>
+  </div>
+  <div class="row" align="center">
+    <div id="radar" style="width:80%;">
+      <canvas id="radar_chart"></canvas>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col">
+      <p><br>data from: Natural Stat Trick (@natstattrick)<br>chart by: @moman939</p>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nhl_team.js') }}"></script>
+{% endblock %}

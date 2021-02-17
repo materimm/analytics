@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 import api_controller as api
 import nhl_game_scraper as ngs
+import nhl_teams as nhlt
 
 app = Flask(__name__)
 
@@ -31,8 +32,14 @@ def nfl():
 
 @app.route('/nhl_game', methods=['GET'])
 def nhl_game():
-    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
+    url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272216"
     #url="https://www.espn.com/nhl/playbyplay/_/gameId/401272337"
-    url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272139"
+    #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272139"
     game_obj = ngs.get_shots(url)
     return render_template('nhl_game.html', **locals())
+
+@app.route('/nhl_team', methods=['GET'])
+def nhl_team():
+    teams = ['Buffalo Sabres', 'Boston Bruins', 'New York Islanders', 'New York Rangers', 'Philadelphia Flyers', 'New Jersey Devils', 'Washington Capitals']
+    team_obj = nhlt.get_team_radar(teams)
+    return render_template('nhl_team.html', **locals())

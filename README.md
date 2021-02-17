@@ -7,7 +7,8 @@ Playing around with sports analytics and visualization
 /radar  
 /player_score  
 /nfl  
-/nhl_game
+/nhl_game  
+/nhl_team  
 
 
 ## To start server:  ##
