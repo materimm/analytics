@@ -29,6 +29,10 @@ function team_radar(team_obj) {
           "borderWidth":3
         }
       },
+      title: {
+        display: true,
+        text: ['Team Play Percentages', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+      },
       // scale: {
       //   ticks: {
       //     beginAtZero: true,
@@ -39,6 +43,54 @@ function team_radar(team_obj) {
   });
 }
 
+
+function rolling_xGF(rolling_xGF_obj) {
+  var ctx = document.getElementById("rolling_xGF_chart").getContext("2d");
+  var threshold = Array(rolling_xGF_obj.dates.length).fill(50);
+  var myLineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: rolling_xGF_obj.dates,
+      datasets: [{
+        label: rolling_xGF_obj.name,
+        fill: false,
+        borderColor: rolling_xGF_obj.colors[0],
+        backgroundColor: rolling_xGF_obj.colors[0],
+        pointBackgroundColor: rolling_xGF_obj.colors[0],
+        pointBorderColor: rolling_xGF_obj.colors[0],
+        data: rolling_xGF_obj.xGFs
+      },
+      {
+        label: "Threshold Line",
+        fill: false,
+        borderColor: "#000",
+        backgroundColor: "#000",
+        pointRadius: 0,
+        data: threshold
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: ['Rolling 5 game xGF Average', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+      },
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'xGF%',
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Date',
+          }
+        }],
+      }
+    }
+  });
+}
 
 function hexToRgbA(hex, a){
     var c;
