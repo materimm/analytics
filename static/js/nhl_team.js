@@ -45,34 +45,60 @@ function team_radar(team_obj) {
 
 
 function rolling_xGF(rolling_xGF_obj) {
+  let team_objs = rolling_xGF_obj.teams;
+  let all_dates = rolling_xGF_obj.all_dates;
+
+  let new_dates = [];
+  for(let i=0; i<all_dates.length; i++) {
+    new_dates.push(new Date(all_dates[i]));
+  }
+
+  let datasets = [];
+  for(let i=0; i<team_objs.length; i++) {
+      let t = team_objs[i];
+      let data = [];
+      for(let j=0; j<t.dates.length; j++) {
+          data.push({
+            x: new Date(t.dates[j]),
+            y: t.xGFs[j]
+          });
+      }
+
+      datasets.push({
+        label: t.name,
+        fill: false,
+        borderColor: t.colors[0],
+        backgroundColor: t.colors[0],
+        pointBackgroundColor: t.colors[0],
+        pointBorderColor: t.colors[0],
+        pointRadius: 3,
+        data: data
+      });
+
+  }
+
+  var threshold = Array(new_dates.length).fill(50);
+  datasets.push({
+    label: "Threshold Line",
+    fill: false,
+    borderColor: "#000",
+    backgroundColor: "#000",
+    pointRadius: 0,
+    data: threshold
+  });
+
   var ctx = document.getElementById("rolling_xGF_chart").getContext("2d");
-  var threshold = Array(rolling_xGF_obj.dates.length).fill(50);
+  var timeformat = 'MM/DD/YYYY';
   var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: rolling_xGF_obj.dates,
-      datasets: [{
-        label: rolling_xGF_obj.name,
-        fill: false,
-        borderColor: rolling_xGF_obj.colors[0],
-        backgroundColor: rolling_xGF_obj.colors[0],
-        pointBackgroundColor: rolling_xGF_obj.colors[0],
-        pointBorderColor: rolling_xGF_obj.colors[0],
-        data: rolling_xGF_obj.xGFs
-      },
-      {
-        label: "Threshold Line",
-        fill: false,
-        borderColor: "#000",
-        backgroundColor: "#000",
-        pointRadius: 0,
-        data: threshold
-      }]
+      labels: new_dates,
+      datasets: datasets,
     },
     options: {
       title: {
         display: true,
-        text: ['Rolling 5 game xGF Average', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+        text: ['Rolling 5 game xGF% Average', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
       },
       scales: {
         yAxes: [{
@@ -82,6 +108,11 @@ function rolling_xGF(rolling_xGF_obj) {
           }
         }],
         xAxes: [{
+          type: 'time',
+          time: {
+            parser: timeformat,
+            round: 'day',
+          },
           scaleLabel: {
             display: true,
             labelString: 'Date',
@@ -91,6 +122,7 @@ function rolling_xGF(rolling_xGF_obj) {
     }
   });
 }
+
 
 function hexToRgbA(hex, a){
     var c;
