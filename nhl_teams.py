@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 
-TEAM_STATS_PATH = './NHLData/Natural-Stat-Trick/team-stats.csv'
+TEAM_STATS_PATH = './NHLData/Natural-Stat-Trick/5v5/team-stats.csv'
 
 def upload_data(file_path):
     data = pd.read_csv(file_path)
@@ -82,9 +82,52 @@ def get_rolling_xGF(teams):
     return obj
 
 
+def get_goal_share(teams):
+    data = upload_data(TEAM_STATS_PATH)
+    goal_shares = []
+    for index, row in data.iterrows():
+        team_data = row.to_dict()
+        name = team_data.get('Team')
+        if name in teams:
+            toi = team_data.get('TOI')
+            gf = team_data.get('GF')
+            ga = team_data.get('GA')
+            gf60 = round((gf*60)/toi, 2)
+            ga60 = round((ga*60)/toi, 2)
+            goal_shares.append({
+                'gf60' : gf60,
+                'ga60' : ga60,
+                'name' : name,
+                'colors' : get_team_colors(name)
+            })
+    return goal_shares
+
+def get_expected_goal_share(teams):
+    data = upload_data(TEAM_STATS_PATH)
+    goal_shares = []
+    for index, row in data.iterrows():
+        team_data = row.to_dict()
+        name = team_data.get('Team')
+        if name in teams:
+            toi = team_data.get('TOI')
+            xgf = team_data.get('xGF')
+            xga = team_data.get('xGA')
+            xgf60 = round((xgf*60)/toi, 2)
+            xga60 = round((xga*60)/toi, 2)
+            goal_shares.append({
+                'xgf60' : xgf60,
+                'xga60' : xga60,
+                'name' : name,
+                'colors' : get_team_colors(name)
+            })
+    return goal_shares
+
+
 #if __name__ == '__main__':
-#    teams = ['Buffalo Sabres']#, 'Boston Bruins', 'New York Islanders', 'New York Rangers', 'Philadelphia Flyers', 'New Jersey Devils', 'Washington Capitals']
+#    teams = ['Buffalo Sabres', 'Boston Bruins', 'New York Islanders', 'New York Rangers', 'Philadelphia Flyers', 'New Jersey Devils', 'Washington Capitals']
 #    r = get_team_radar(teams)
 #    teams = ['Buffalo Sabres', 'Philadelphia Flyers']
 #    r = get_rolling_xGF(teams)
+#    r = get_goal_share(teams)
+#    r = get_expected_goal_share(teams)
 #    print(str(r))

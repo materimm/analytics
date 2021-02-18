@@ -43,7 +43,8 @@ def nhl_team():
 
     teams = ['Buffalo Sabres', 'Boston Bruins', 'New York Islanders', 'New York Rangers', 'Philadelphia Flyers', 'New Jersey Devils', 'Washington Capitals']
     team_obj = nhlt.get_team_radar(teams)
-
     rolling_xGF_obj = nhlt.get_rolling_xGF(['Washington Capitals', 'Buffalo Sabres'])
+    goal_share_obj = nhlt.get_goal_share(teams)
+    xgoal_share_obj = nhlt.get_expected_goal_share(teams)
 
     return render_template('nhl_team.html', **locals())

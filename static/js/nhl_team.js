@@ -98,7 +98,7 @@ function rolling_xGF(rolling_xGF_obj) {
     options: {
       title: {
         display: true,
-        text: ['Rolling 5 game xGF% Average', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+        text: ['Rolling 5 game xGF% Average', 'situations: 5v5', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
       },
       scales: {
         yAxes: [{
@@ -121,6 +121,96 @@ function rolling_xGF(rolling_xGF_obj) {
       }
     }
   });
+}
+
+function goal_share(goal_share_obj) {
+    let datasets = []
+    for(let i=0; i<goal_share_obj.length; i++) {
+        let team = goal_share_obj[i];
+        let data = {
+          x: team.gf60,
+          y: team.ga60,
+        };
+        datasets.push({
+          label: team.name,
+          pointRadius: 5,
+          borderColor: team.colors[0],
+          backgroundColor: team.colors[0],
+          data: [data]
+        });
+    }
+
+    let scatterData = {datasets};
+    let ctx = document.getElementById("goal_share_chart").getContext("2d");
+    let scatter = new Chart(ctx, {
+        type: 'scatter',
+				data: scatterData,
+				options: {
+          title: {
+            display: true,
+            text: ['Goal Share', 'situations: 5v5', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+          },
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'GF/60',
+              }
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'GA/60',
+              }
+            }],
+          }
+				}
+		});
+}
+
+function expected_goal_share(xgoal_share_obj) {
+    let datasets = []
+    for(let i=0; i<xgoal_share_obj.length; i++) {
+        let team = xgoal_share_obj[i];
+        let data = {
+          x: team.xgf60,
+          y: team.xga60,
+        };
+        datasets.push({
+          label: team.name,
+          pointRadius: 5,
+          borderColor: team.colors[0],
+          backgroundColor: team.colors[0],
+          data: [data]
+        });
+    }
+
+    let scatterData = {datasets};
+    let ctx = document.getElementById("xgoal_share_chart").getContext("2d");
+    let scatter = new Chart(ctx, {
+        type: 'scatter',
+				data: scatterData,
+				options: {
+          title: {
+            display: true,
+            text: ['Expected Goal Share', 'situations: 5v5', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+          },
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'xGF/60',
+              }
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'xGA/60',
+              }
+            }],
+          }
+				}
+		});
 }
 
 

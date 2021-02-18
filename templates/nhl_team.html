@@ -6,11 +6,19 @@
   <h1>Team data</h1>
   <button onclick="team_radar({{ team_obj }})">Team Radar</button>
   <button onclick="rolling_xGF({{ rolling_xGF_obj }})">Rolling xGF</button>
+  <button onclick="goal_share({{ goal_share_obj }})">Goal Share</button>
+  <button onclick="expected_goal_share({{ xgoal_share_obj }})">xG Share</button>
   <div id="radar" style="width:80%;">
     <canvas id="radar_chart"></canvas>
   </div>
   <div id="rolling_xGF" style="width:80%;">
       <canvas id="rolling_xGF_chart"></canvas>
+  </div>
+  <div style="width:80%;">
+      <canvas id="goal_share_chart"></canvas>
+  </div>
+  <div style="width:80%;">
+      <canvas id="xgoal_share_chart"></canvas>
   </div>
 {% endblock %}
 {% block scripts %}
