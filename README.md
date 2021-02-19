@@ -9,6 +9,7 @@ Playing around with sports analytics and visualization
 /nfl  
 /nhl_game  
 /nhl_team  
+/nhl_single_game
 
 
 ## To start server:  ##

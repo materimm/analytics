@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row mb-1">
+      <h1>{{ game_stats[0].name }} vs {{ game_stats[1].name }}</h1>
+    </div>
+    <div class="row mb-2">
+      <div class="col"><button type="button" class="btn btn-primary" onclick="get_game_stats({{game_stats}})">Game Stats</button></div>
+      <div class="col-8"></div>
+    </div>
+    <div class="row">
+      <h3>Teams</h3>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="corsi"></canvas></div>
+      <div class="col"><canvas id="xgf"></canvas></div>
+      <div class="col"><canvas id="hdcf"></canvas></div>
+    </div>
+    <div class="row">
+      <h3>Skaters</h3>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="t1_skaters_toi"></canvas></div>
+      <div class="col"><canvas id="t2_skaters_toi"></canvas></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="t1_skaters_cf"></canvas></div>
+      <div class="col"><canvas id="t2_skaters_cf"></canvas></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="t1_skaters_xgf"></canvas></div>
+      <div class="col"><canvas id="t2_skaters_xgf"></canvas></div>
+    </div>
+    <div class="row">
+      <h3>Lines</h3>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="t1_lines_toi"></canvas></div>
+      <div class="col"><canvas id="t2_lines_toi"></canvas></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="t1_lines_cf"></canvas></div>
+      <div class="col"><canvas id="t2_lines_cf"></canvas></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="t1_lines_xgf"></canvas></div>
+      <div class="col"><canvas id="t2_lines_xgf"></canvas></div>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nhl_single_game.js') }}"></script>
+{% endblock %}

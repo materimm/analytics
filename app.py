@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template
 import api_controller as api
 import nhl_game_scraper as ngs
 import nhl_teams as nhlt
+import nhl_single_game as nhlsg
 
 app = Flask(__name__)
 
@@ -48,3 +49,20 @@ def nhl_team():
     xgoal_share_obj = nhlt.get_expected_goal_share(teams)
 
     return render_template('nhl_team.html', **locals())
+
+@app.route('/nhl_single_game', methods=['GET'])
+def nhl_single_game():
+    game_stats = nhlsg.get_game_stats()
+    return render_template('nhl_single_game.html', **locals())
+
+#################
+### Just APIs ###
+#################
+#@app.route('/team_radar', methods=['GET'])
+#def team_radar():
+#    print('here')
+#    print(str(request))
+#    print(str(request.form))
+#    teams = request.form['teams']
+#    print(str(teams))
+#    return nhlt.get_team_radar(teams)

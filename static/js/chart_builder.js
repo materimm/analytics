@@ -77,3 +77,74 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel) {
       }
   });
 }
+
+function doughnut(id, data, data_label, labels, colors, title, situation) {
+  let config = {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: data,
+          backgroundColor: colors,
+          label: data_label
+        }],
+        labels: labels,
+      },
+      options: {
+        responsive: true,
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: [title,
+                'situation: ' + situation,
+                'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
+
+    let ctx = document.getElementById(id).getContext('2d');
+    let doughnut = new Chart(ctx, config);
+}
+
+function bar_chart(id, type, data, data_label, labels, color, title, situation) {
+  let config = {
+      type: type,
+      data: {
+        datasets: [{
+          data: data,
+          backgroundColor: hexToRgbA(color, 0.6),
+          borderColor: color,
+          borderWidth: 2,
+          label: data_label
+        }],
+        labels: labels,
+      },
+      options: {
+        responsive: true,
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: [title,
+                'situation: ' + situation,
+                'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+          }]
+        }
+      }
+    };
+
+    let ctx = document.getElementById(id).getContext('2d');
+    let bar = new Chart(ctx, config);
+}
