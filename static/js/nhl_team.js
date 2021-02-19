@@ -15,32 +15,7 @@ function team_radar(team_obj) {
       pointHoverBorderColor: team.colors[0]
     });
   }
-  var ctx = document.getElementById("radar_chart").getContext("2d");
-  var radarChart = new Chart(ctx,  {
-    "type": "radar",
-    "data":{
-      "labels": team_obj.stats,
-      "datasets": datasets,
-    },
-    "options": {
-      "elements": {
-        "line": {
-          "tension":0,
-          "borderWidth":3
-        }
-      },
-      title: {
-        display: true,
-        text: ['Team Play Percentages', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
-      },
-      // scale: {
-      //   ticks: {
-      //     beginAtZero: true,
-      //     max: 60
-      //   }
-      // }
-    }
-  });
+  radar_chart('radar_chart', team_obj.stats, datasets, 'Team Play', '5v5');
 }
 
 
@@ -87,40 +62,25 @@ function rolling_xGF(rolling_xGF_obj) {
     data: threshold
   });
 
-  var ctx = document.getElementById("rolling_xGF_chart").getContext("2d");
-  var timeformat = 'MM/DD/YYYY';
-  var myLineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: new_dates,
-      datasets: datasets,
+  x = {
+    type: 'time',
+    time: {
+      parser: 'MM/DD/YYYY',
+      round: 'day',
     },
-    options: {
-      title: {
-        display: true,
-        text: ['Rolling 5 game xGF% Average', 'situations: 5v5', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
-      },
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'xGF%',
-          }
-        }],
-        xAxes: [{
-          type: 'time',
-          time: {
-            parser: timeformat,
-            round: 'day',
-          },
-          scaleLabel: {
-            display: true,
-            labelString: 'Date',
-          }
-        }],
-      }
+    scaleLabel: {
+      display: true,
+      labelString: 'Date',
     }
-  });
+  };
+
+  y = {
+    scaleLabel: {
+      display: true,
+      labelString: 'xGF%',
+    }
+  };
+  line_chart('rolling_xGF_chart', new_dates, datasets, 'Rolling 5 game xGF% Average', '5v5', x, y)
 }
 
 function goal_share(goal_share_obj) {
@@ -141,31 +101,7 @@ function goal_share(goal_share_obj) {
     }
 
     let scatterData = {datasets};
-    let ctx = document.getElementById("goal_share_chart").getContext("2d");
-    let scatter = new Chart(ctx, {
-        type: 'scatter',
-				data: scatterData,
-				options: {
-          title: {
-            display: true,
-            text: ['Goal Share', 'situations: 5v5', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
-          },
-          scales: {
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'GF/60',
-              }
-            }],
-            yAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'GA/60',
-              }
-            }],
-          }
-				}
-		});
+    scatter_chart('goal_share_chart', scatterData, 'Goal Share', '5v5', 'GF/60', 'GA/60');
 }
 
 function expected_goal_share(xgoal_share_obj) {
@@ -186,43 +122,5 @@ function expected_goal_share(xgoal_share_obj) {
     }
 
     let scatterData = {datasets};
-    let ctx = document.getElementById("xgoal_share_chart").getContext("2d");
-    let scatter = new Chart(ctx, {
-        type: 'scatter',
-				data: scatterData,
-				options: {
-          title: {
-            display: true,
-            text: ['Expected Goal Share', 'situations: 5v5', 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
-          },
-          scales: {
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'xGF/60',
-              }
-            }],
-            yAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'xGA/60',
-              }
-            }],
-          }
-				}
-		});
-}
-
-
-function hexToRgbA(hex, a){
-    var c;
-    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-        c= hex.substring(1).split('');
-        if(c.length== 3){
-            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-        c= '0x'+c.join('');
-        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',' + a + ')';
-    }
-    throw new Error('Bad Hex');
+    scatter_chart('xgoal_share_chart', scatterData, 'Expected Goal Share', '5v5', 'GF/60', 'GA/60');
 }

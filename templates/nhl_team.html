@@ -3,22 +3,90 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1>Team data</h1>
-  <button onclick="team_radar({{ team_obj }})">Team Radar</button>
-  <button onclick="rolling_xGF({{ rolling_xGF_obj }})">Rolling xGF</button>
-  <button onclick="goal_share({{ goal_share_obj }})">Goal Share</button>
-  <button onclick="expected_goal_share({{ xgoal_share_obj }})">xG Share</button>
-  <div id="radar" style="width:80%;">
-    <canvas id="radar_chart"></canvas>
-  </div>
-  <div id="rolling_xGF" style="width:80%;">
+  <div class="container">
+    <div class="row mb-1">
+      <h1>Team data</h1>
+    </div>
+    <div class="row mb-1 pb-1 border-bottom">
+      <div class="col">
+        <div class="row mb-1"><h3>North Division</h3></div>
+        <div class="row mb-1">
+          <select id="nhl_north" class="form-select" size="7" multiple>
+            <option value="TOR">Toronto Maple Leafs</option>
+            <option value="MTL">Montreal Canadiens</option>
+            <option value="EDM">Edmonton Oilers</option>
+            <option value="WPG">Winnipeg Jets</option>
+            <option value="CGY">Calgary Flames</option>
+            <option value="OTT">Ottawa Senators</option>
+            <option value="VAN">Vancouver Canucks</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row mb-1"><h3>East Division</h3></div>
+        <div class="row mb-1">
+          <select id="nhl_east" class="form-select" size="8" multiple>
+            <option value="BOS">Boston Bruins</option>
+            <option value="PHI">Philadelphia Flyers</option>
+            <option value="WSH">Washington Capitals</option>
+            <option value="NYI">New York Islanders</option>
+            <option value="PIT">Pittsburgh Penguins</option>
+            <option value="NJ">New Jersey Devils</option>
+            <option value="NYR">New York Rangers</option>
+            <option value="BUF">Buffalo Sabres</option>
+          </select>
+        </div>
+      </div>
+      <div class="col mr-3">
+        <div class="row mb-1"><h3>Central Division</h3></div>
+        <div class="row mb-1">
+          <select id="nhl_central" class="form-select" size="8" multiple>
+            <option value="FLA">Florida Panthers</option>
+            <option value="CHI">Chicago Blackhawks</option>
+            <option value="TB">Tampa Bay Lightning</option>
+            <option value="CAR">Carolina Hurricanes</option>
+            <option value="CBJ">Columbus Blue Jackets</option>
+            <option value="DAL">Dallas Stars</option>
+            <option value="NSH">Nashville Predators</option>
+            <option value="DET">Detroit Red Wings</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row mb-1"><h3>West Division</h3></div>
+        <div class="row mb-1">
+          <select id="nhl_west" class="form-select" size="8" multiple>
+            <option value="STL">St. Louis Blues</option>
+            <option value="VGK">Vegas Golden Knights</option>
+            <option value="COL">Colorado Avalanche</option>
+            <option value="ARI">Arizona Coyotes</option>
+            <option value="LAK">Los Angeles Kings</option>
+            <option value="ANA">Anaheim Ducks</option>
+            <option value="MIN">Minnesota Wild</option>
+            <option value="SJ">San Jose Sharks</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-1 pb-1 border-bottom">
+      <div class="col"><button type="button" class="btn btn-primary" onclick="team_radar({{ team_obj }})">Team Radar</button></div>
+      <div class="col"><button type="button" class="btn btn-primary" onclick="rolling_xGF({{ rolling_xGF_obj }})">Rolling xGF</button></div>
+      <div class="col"><button type="button" class="btn btn-primary" onclick="goal_share({{ goal_share_obj }})">Goal Share</button></div>
+      <div class="col"><button type="button" class="btn btn-primary" onclick="expected_goal_share({{ xgoal_share_obj }})">xG Share</button></div>
+      <div class="col-6"></div>
+    </div>
+    <div class="row mb-1">
+      <canvas id="radar_chart"></canvas>
+    </div>
+    <div class="row mb-1">
       <canvas id="rolling_xGF_chart"></canvas>
-  </div>
-  <div style="width:80%;">
+    </div>
+    <div class="row mb-1">
       <canvas id="goal_share_chart"></canvas>
-  </div>
-  <div style="width:80%;">
+    </div>
+    <div class="row mb-1">
       <canvas id="xgoal_share_chart"></canvas>
+    </div>
   </div>
 {% endblock %}
 {% block scripts %}

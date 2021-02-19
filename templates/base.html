@@ -17,6 +17,9 @@
     {% endblock %}
   </head>
   <body>
+    <div id="header">
+      {% include 'header.html' %}
+    </div>
 
     <div id="content">
       <main class="col-sm-12 col-md-12 pt-3" role="main">
@@ -32,6 +35,10 @@
     <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <!-- Custom JS imports -->
+    <script src="{{ url_for('static', filename='js/helper.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chart_builder.js') }}"></script>
     {% endblock %}
   </body>
 </html>
