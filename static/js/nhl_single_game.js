@@ -2,9 +2,12 @@ function get_game_stats(game_stats) {
       team1 = game_stats[0];
       team2 = game_stats[1];
 
+      t1_final_stats = team1.periods[team1.periods.length - 1];
+      t2_final_stats = team2.periods[team2.periods.length - 1];
+
       //team stats
       let cf_chart = doughnut('corsi',
-                              [team1.cf, team2.cf],
+                              [t1_final_stats.cf, t2_final_stats.cf],
                               'Shot Share',
                               [team1.name, team2.name],
                               [hexToRgbA(team1.colors[0], 1),hexToRgbA(team2.colors[0], 1)],
@@ -12,7 +15,7 @@ function get_game_stats(game_stats) {
                               '5v5');
 
       let xgf_chart = doughnut('xgf',
-                              [team1.xgf, team2.xgf],
+                              [t1_final_stats.xgf, t2_final_stats.xgf],
                               'Expected Goal Differential',
                               [team1.name, team2.name],
                               [hexToRgbA(team1.colors[0], 1),hexToRgbA(team2.colors[0], 1)],
@@ -20,7 +23,7 @@ function get_game_stats(game_stats) {
                               '5v5');
 
       let hdcf_chart = doughnut('hdcf',
-                              [team1.hdcf, team2.hdcf],
+                              [t1_final_stats.hdcf, t2_final_stats.hdcf],
                               'High Danger Shot Share',
                               [team1.name, team2.name],
                               [hexToRgbA(team1.colors[0], 1),hexToRgbA(team2.colors[0], 1)],

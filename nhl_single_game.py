@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import nhl_helper as nhlh
 
 OVERALL_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-overall.csv'
 TEAM1_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-team1.csv'
@@ -12,6 +13,26 @@ def upload_data(file_path):
     return data;
 
 def get_game_stats():
+    t1_name = ''
+    t2_name = ''
+    row_count = 1
+    t1_periods = []
+    t2_periods = []
+    data = upload_data(OVERALL_PATH)
+    for index, row in data.iterrows():
+        r = row.to_dict()
+        period = r.get('Period')
+        if row_count < 6:
+            if period == '1':
+                t1_name = r.get('Team')
+            t1_periods.append(get_team_values(r))
+        else:
+            if period == '1':
+                t2_name = r.get('Team')
+            t2_periods.append(get_team_values(r))
+        row_count += 1
+
+
     data = upload_data(TEAM1_PATH)
     t1_skaters = []
     t1_toi = []
@@ -61,8 +82,8 @@ def get_game_stats():
         t2_lines_xgf.append(r.get('xGF%'))
 
     obj1 = {
-        'name' : 'Philadelphia Flyers',
-        'colors': ["#F74902", "#000000", "#ffffff"],
+        'name' : t1_name,
+        'colors': nhlh.get_team_colors(t1_name),
         'skaters' : {
             'names': t1_skaters,
             'toi': t1_toi,
@@ -75,14 +96,12 @@ def get_game_stats():
             'cf': t1_lines_cf,
             'xgf': t1_lines_xgf
         },
-        'cf': 70,
-        'xgf': 60,
-        'hdcf': 50
+        'periods': t1_periods
     }
 
     obj2 = {
-        'name' : 'New York Rangers',
-        'colors': ["#0038A8", "#CE1126", "#ffffff"],
+        'name' : t2_name,
+        'colors': nhlh.get_team_colors(t2_name),
         'skaters' : {
             'names': t2_skaters,
             'toi': t2_toi,
@@ -95,32 +114,19 @@ def get_game_stats():
             'cf': t2_lines_cf,
             'xgf': t2_lines_xgf
         },
-        'cf': 30,
-        'xgf': 40,
-        'hdcf': 50
+        'periods': t2_periods
     }
 
     return [obj1, obj2]
 
-
-def get_team_obj(data):
+def get_team_values(data):
     return {
-        'name' : '',
-        'colors': [],
-        'cf%': 0,
-        'xgf%': 0,
-        'hdcf%': 0
+        'cf': data.get('CF%').strip('%'),
+        'xgf': data.get('xGF%').strip('%'),
+        'hdcf': data.get('HDCF%').strip('%')
     }
-
-def get_lines_obj(data):
-    return {
-        'line': data.get('Player 1') + ' & ' + data.get('Player 2') + ' & ' + data.get('Player 3'),
-        'toi': data.get('TOI'),
-        'cf%': data.get('CF%'),
-        'xgf%': data.get('xGF%')
-    }
-
 
 
 #if __name__ == '__main__':
-#    get_game_stats()
+#    r = get_game_stats()
+#    print(str(r))
