@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row mb-1">
+      <h1>{{ qb_stats.name }}</h1>
+    </div>
+    <div class="row mb-2">
+      <div class="col"><button type="button" class="btn btn-primary" onclick="get_rolling_epa_and_cpoe({{qb_stats}})">Rolling EPA and CPOE</button></div>
+      <div class="col-8"></div>
+    </div>
+    <div class="row">
+      <h3>QB Rolling EPA and CPOE</h3>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="rolling_epa_avg"></canvas></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="rolling_cpoe_avg"></canvas></div>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nfl_qbs.js') }}"></script>
+{% endblock %}

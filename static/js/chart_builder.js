@@ -24,7 +24,7 @@ function radar_chart(id, labels, datasets, title, situation) {
 }
 
 
-function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis) {
+function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_from) {
   let ctx = document.getElementById(id).getContext("2d");
   let lineChart = new Chart(ctx, {
     type: 'line',
@@ -37,7 +37,7 @@ function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis) {
         display: true,
         text: [title,
               'situations: ' + situation,
-              'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+              'data: ' + data_from + ' | chart: @moman939'],
       },
       scales: {
         xAxes: [xAxis],
@@ -136,6 +136,11 @@ function bar_chart(id, type, data, data_label, labels, color, title, situation) 
                 'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
         },
         scales: {
+          xAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+          }],
           yAxes: [{
             ticks: {
                 beginAtZero: true

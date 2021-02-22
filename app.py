@@ -3,6 +3,7 @@ import api_controller as api
 import nhl_game_scraper as ngs
 import nhl_teams as nhlt
 import nhl_single_game as nhlsg
+import nfl_player as nflp
 
 app = Flask(__name__)
 
@@ -54,6 +55,13 @@ def nhl_team():
 def nhl_single_game():
     game_stats = nhlsg.get_game_stats()
     return render_template('nhl_single_game.html', **locals())
+
+@app.route('/nfl_qbs', methods=['GET'])
+def nfl_qbs():
+    qb = 'J.Allen'
+    seasons = list(range(2018, 2021))
+    qb_stats = nflp.get_rolling_epa_and_cpoe(qb, seasons)
+    return render_template('nfl_qbs.html', **locals())
 
 #################
 ### Just APIs ###

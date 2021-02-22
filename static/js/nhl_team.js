@@ -80,7 +80,7 @@ function rolling_xGF(rolling_xGF_obj) {
       labelString: 'xGF%',
     }
   };
-  line_chart('rolling_xGF_chart', new_dates, datasets, 'Rolling 5 game xGF% Average', '5v5', x, y)
+  line_chart('rolling_xGF_chart', new_dates, datasets, 'Rolling 5 game xGF% Average', '5v5', x, y, 'Natural Stat Trick (@natstattrick)')
 }
 
 function goal_share(goal_share_obj) {
