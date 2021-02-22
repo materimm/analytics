@@ -3,7 +3,7 @@ import api_controller as api
 import nhl_game_scraper as ngs
 import nhl_teams as nhlt
 import nhl_single_game as nhlsg
-import nfl_player as nflp
+import nfl_qbs as qbs
 
 app = Flask(__name__)
 
@@ -58,9 +58,11 @@ def nhl_single_game():
 
 @app.route('/nfl_qbs', methods=['GET'])
 def nfl_qbs():
-    qb = 'J.Allen'
-    seasons = list(range(2018, 2021))
-    qb_stats = nflp.get_rolling_epa_and_cpoe(qb, seasons)
+    qb = 'C.Newton'
+    seasons = list(range(2020, 2021))
+
+    qb_stats = qbs.get_rolling_epa_and_cpoe(qb, seasons)
+    epa_per_dropback = qbs.get_qb_epa_ranked(seasons)
     return render_template('nfl_qbs.html', **locals())
 
 #################

@@ -111,14 +111,17 @@ function doughnut(id, data, data_label, labels, colors, title, situation) {
     let doughnut = new Chart(ctx, config);
 }
 
-function bar_chart(id, type, data, data_label, labels, color, title, situation) {
+function bar_chart(id, type, data, data_label, labels, colors, title, situation, data_from) {
   let config = {
       type: type,
       data: {
         datasets: [{
           data: data,
-          backgroundColor: hexToRgbA(color, 0.6),
-          borderColor: color,
+          backgroundColor: function(context) {
+              var index = context.dataIndex;
+              return hexToRgbA(colors[index], 0.6);
+          },
+          borderColor: colors,
           borderWidth: 2,
           label: data_label
         }],
@@ -132,8 +135,8 @@ function bar_chart(id, type, data, data_label, labels, color, title, situation) 
         title: {
           display: true,
           text: [title,
-                'situation: ' + situation,
-                'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+                'Situation: ' + situation,
+                'data: ' + data_from + ' | chart: @moman939'],
         },
         scales: {
           xAxes: [{

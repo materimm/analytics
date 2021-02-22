@@ -59,3 +59,15 @@ function get_rolling_epa_and_cpoe(qb_stats) {
                                 {}, {},
                                 'NFLFastR')
 }
+
+function get_epa_per_dropback(epapd) {
+  let epa_per_dropback_chart = bar_chart('epa_per_dropback',
+                          'bar',
+                          epapd.epa,
+                          "Expected Points per Dropback",
+                          epapd.qbs,
+                          epapd.colors,
+                          "Expected Points per Dropback",
+                          epapd.seasons + ' - ' + epapd.situation,
+                          'NFLFastR');
+}
