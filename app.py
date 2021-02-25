@@ -1,9 +1,16 @@
 from flask import Flask, jsonify, request, render_template
 import api_controller as api
+# NHL imports
 import nhl_game_scraper as ngs
 import nhl_teams as nhlt
 import nhl_single_game as nhlsg
+import nhl_single_team as nhlst
+import nhl_skater as nhlsk
+
+#NFL imports
 import nfl_qbs as qbs
+
+
 
 app = Flask(__name__)
 
@@ -22,15 +29,18 @@ def pdo():
 def radar():
     return render_template('radar.html')
 
+
 @app.route('/player_score', methods=['GET'])
 def player_score():
     player_stats = api.get_player_stats()
     return render_template('player_score.html', **locals())
 
+
 @app.route('/nfl', methods=['GET'])
 def nfl():
     qbs = api.get_epa(2020)
     return render_template('nfl.html', **locals())
+
 
 @app.route('/nhl_game', methods=['GET'])
 def nhl_game():
@@ -39,6 +49,7 @@ def nhl_game():
     #url = "https://www.espn.com/nhl/playbyplay/_/gameId/401272139"
     game_obj = ngs.get_shots(url)
     return render_template('nhl_game.html', **locals())
+
 
 @app.route('/nhl_team', methods=['GET'])
 def nhl_team():
@@ -51,10 +62,27 @@ def nhl_team():
 
     return render_template('nhl_team.html', **locals())
 
+
+@app.route('/nhl_single_team', methods=['GET'])
+def nhl_single_team():
+    team = 'Buffalo Sabres'
+    skater_stats = nhlst.get_skater_stats(team)
+    return render_template('nhl_single_team.html', **locals())
+
+
 @app.route('/nhl_single_game', methods=['GET'])
 def nhl_single_game():
     game_stats = nhlsg.get_game_stats()
     return render_template('nhl_single_game.html', **locals())
+
+
+@app.route('/nhl_skater', methods=['GET'])
+def nhl_skater():
+    player = 'Jeff Skinner'
+    seasons = list(range(2010, 2021))
+    skater_stats = nhlsk.get_scoring_locations(player, seasons)
+    return render_template('nhl_skater.html', **locals())
+
 
 @app.route('/nfl_qbs', methods=['GET'])
 def nfl_qbs():

@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-import nhl_helper as nhlh
+import helper as help
 
 OVERALL_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-overall.csv'
 TEAM1_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-team1.csv'
@@ -22,7 +22,7 @@ def get_game_stats():
     for index, row in data.iterrows():
         r = row.to_dict()
         period = r.get('Period')
-        if row_count < 6:
+        if row_count < 5: #TODO find better switch
             if period == '1':
                 t1_name = r.get('Team')
             t1_periods.append(get_team_values(r))
@@ -83,7 +83,7 @@ def get_game_stats():
 
     obj1 = {
         'name' : t1_name,
-        'colors': nhlh.get_team_colors(t1_name),
+        'colors': help.get_nhl_team_colors(t1_name),
         'skaters' : {
             'names': t1_skaters,
             'toi': t1_toi,
@@ -101,7 +101,7 @@ def get_game_stats():
 
     obj2 = {
         'name' : t2_name,
-        'colors': nhlh.get_team_colors(t2_name),
+        'colors': help.get_nhl_team_colors(t2_name),
         'skaters' : {
             'names': t2_skaters,
             'toi': t2_toi,

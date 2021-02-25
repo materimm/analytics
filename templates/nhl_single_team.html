@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row mb-1">
+      <h1>Team stats</h1>
+    </div>
+    <div class="row mb-2">
+      <div class="col"><button type="button" class="btn btn-primary" onclick="get_team_charts({{team_stats}})">Team Stats</button></div>
+      <div class="col-8"></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="team_xGF"></canvas></div>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nfl_single_team.js') }}"></script>
+{% endblock %}

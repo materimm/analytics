@@ -156,3 +156,36 @@ function bar_chart(id, type, data, data_label, labels, colors, title, situation,
     let ctx = document.getElementById(id).getContext('2d');
     let bar = new Chart(ctx, config);
 }
+
+function stacked_bar_chart(id, datasets, labels, title, situation, data_from) {
+  let config = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: datasets,
+      },
+      options: {
+        responsive: true,
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: [title,
+                'Situation: ' + situation,
+                'data: ' + data_from + ' | chart: @moman939'],
+        },
+        scales: {
+          xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+        }
+      }
+    };
+
+    let ctx = document.getElementById(id).getContext('2d');
+    let bar = new Chart(ctx, config);
+}

@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
 import json
+import helper as help
 
 def get_shots(url):
     home_shots = 0
@@ -62,7 +63,8 @@ def get_shots(url):
 
     driver.quit()
 
-    home_colors, away_colors = get_team_colors(home_team_name, away_team_name)
+    home_colors = help.get_nhl_team_colors(home_team_name)
+    away_colors = help.get_nhl_team_colors(away_team_name)
 
     obj = {
         "home": {
@@ -152,19 +154,6 @@ def get_shots_web_reader(soup, home_roster, away_roster):
     }
 
     return home_shots, away_shots, shot_flow_list, shot_flow_time, shots_per_60
-
-
-def get_team_colors(home_team_name, away_team_name):
-    with open('./static/json/team_abbrevs.json') as teams_file:
-        teams = json.load(teams_file)
-    with open('./static/json/nhl_team_colors.json') as colors_file:
-        colors = json.load(colors_file)
-    home_abbrev = teams[home_team_name]
-    away_abbrev = teams[away_team_name]
-    home_colors = colors[home_abbrev]
-    away_colors = colors[away_abbrev]
-
-    return home_colors, away_colors
 
 
 def get_roster(url):

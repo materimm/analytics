@@ -4,15 +4,15 @@ import pandas as pd
 #############
 #### NHL ####
 #############
-def get_team_colors(team_name):
+def get_nhl_team_colors(team_name):
     with open('./static/json/nhl_team_colors.json') as colors_file:
         colors = json.load(colors_file)
-    abbrev = get_team_abbreviation(team_name)
+    abbrev = get_nhl_team_abbreviation(team_name)
     colors = colors[abbrev]
 
     return colors
 
-def get_team_abbreviation(team_name):
+def get_nhl_team_abbreviation(team_name):
     with open('./static/json/team_abbrevs.json') as teams_file:
         teams = json.load(teams_file)
     return teams[team_name]
@@ -28,6 +28,7 @@ def get_nfl_data(season):
     else:
         print(str(season) + " not in data")
 
+
 def get_nfl_team_colors(team_name):
     with open('./static/json/nfl_team_colors.json') as colors_file:
         colors = json.load(colors_file)
@@ -37,6 +38,11 @@ def get_nfl_team_colors(team_name):
 ##############
 #### Both ####
 ##############
+def upload_data(file_path):
+    data = pd.read_csv(file_path)
+    return data;
+
+
 def get_5_game_rolling_average(arr):
     rolling_avg = []
     queue = []

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row mb-1">
+      <h1>Skater stats</h1>
+    </div>
+    <div class="row mb-2">
+      <div class="col"><button type="button" class="btn btn-primary" onclick="get_scoring_chart({{skater_stats}})">Scoring locations</button></div>
+      <div class="col-8"></div>
+    </div>
+    <div class="row">
+      <div class="col"><canvas id="scoring_locations"></canvas></div>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nhl_skater.js') }}"></script>
+{% endblock %}

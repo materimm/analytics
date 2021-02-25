@@ -1,14 +1,11 @@
 import pandas as pd
 import json
+import helper as help
 
 TEAM_STATS_PATH = './NHLData/Natural-Stat-Trick/5v5/team-stats.csv'
 
-def upload_data(file_path):
-    data = pd.read_csv(file_path)
-    return data;
-
 def get_team_radar(team_names):
-    data = upload_data(TEAM_STATS_PATH)
+    data = help.upload_data(TEAM_STATS_PATH)
     radar_teams = []
     for index, row in data.iterrows():
         team_data = row.to_dict()
@@ -16,7 +13,7 @@ def get_team_radar(team_names):
         if name in team_names:
             obj = {
                 'name' : name,
-                'colors' : get_team_colors(name),
+                'colors' : help.get_nhl_team_colors(name),
                 'data' : [team_data.get('CF%'), team_data.get('xGF%'), team_data.get('GF%'), team_data.get('SF%'), team_data.get('SCF%'), team_data.get('SCGF%')] #, team_data.get('SV%'), team_data.get('SH%')]
             }
             radar_teams.append(obj)
@@ -27,26 +24,13 @@ def get_team_radar(team_names):
     }
     return radar_obj
 
-def get_team_colors(team_name):
-    with open('./static/json/nhl_team_colors.json') as colors_file:
-        colors = json.load(colors_file)
-    abbrev = get_team_abbreviation(team_name)
-    colors = colors[abbrev]
-
-    return colors
-
-def get_team_abbreviation(team_name):
-    with open('./static/json/team_abbrevs.json') as teams_file:
-        teams = json.load(teams_file)
-    return teams[team_name]
-
 def get_rolling_xGF(teams):
     rolling_xGFs = []
     all_dates = []
     for team in teams:
-        abbrev = get_team_abbreviation(team)
+        abbrev = help.get_nhl_team_abbreviation(team)
         file_path = './NHLData/Natural-Stat-Trick/5v5/' + abbrev + '-games.csv'
-        data = upload_data(file_path)
+        data = help.upload_data(file_path)
         dates = []
         xGFs = []
         queue = []
@@ -69,7 +53,7 @@ def get_rolling_xGF(teams):
             'dates': dates,
             'xGFs': xGFs,
             'name' : team,
-            'colors' : get_team_colors(team)
+            'colors' : help.get_nhl_team_colors(team)
         }
         rolling_xGFs.append(obj)
 
@@ -83,7 +67,7 @@ def get_rolling_xGF(teams):
 
 
 def get_goal_share(teams):
-    data = upload_data(TEAM_STATS_PATH)
+    data = help.upload_data(TEAM_STATS_PATH)
     goal_shares = []
     for index, row in data.iterrows():
         team_data = row.to_dict()
@@ -98,12 +82,12 @@ def get_goal_share(teams):
                 'gf60' : gf60,
                 'ga60' : ga60,
                 'name' : name,
-                'colors' : get_team_colors(name)
+                'colors' : help.get_nhl_team_colors(name)
             })
     return goal_shares
 
 def get_expected_goal_share(teams):
-    data = upload_data(TEAM_STATS_PATH)
+    data = help.upload_data(TEAM_STATS_PATH)
     goal_shares = []
     for index, row in data.iterrows():
         team_data = row.to_dict()
@@ -118,7 +102,7 @@ def get_expected_goal_share(teams):
                 'xgf60' : xgf60,
                 'xga60' : xga60,
                 'name' : name,
-                'colors' : get_team_colors(name)
+                'colors' : help.get_nhl_team_colors(name)
             })
     return goal_shares
 
