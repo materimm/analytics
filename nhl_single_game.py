@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import helper as help
 
-OVERALL_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-overall.csv'
+#OVERALL_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-overall.csv'
 TEAM1_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-team1.csv'
 TEAM2_PATH = './NHLData/Natural-Stat-Trick/single-game/5v5-team2.csv'
 TEAM1_LINES_PATH = './NHLData/Natural-Stat-Trick/single-game/team1-lines.csv'
@@ -13,24 +13,21 @@ def upload_data(file_path):
     return data;
 
 def get_game_stats():
-    t1_name = ''
-    t2_name = ''
-    row_count = 1
+    t1_name = 'Buffalo Sabres'
+    t2_name = 'Philadelphia Flyers'
     t1_periods = []
     t2_periods = []
-    data = upload_data(OVERALL_PATH)
-    for index, row in data.iterrows():
-        r = row.to_dict()
-        period = r.get('Period')
-        if row_count < 5: #TODO find better switch
-            if period == '1':
-                t1_name = r.get('Team')
-            t1_periods.append(get_team_values(r))
-        else:
-            if period == '1':
-                t2_name = r.get('Team')
-            t2_periods.append(get_team_values(r))
-        row_count += 1
+
+    t1_periods.append({
+        'cf': 43.64,
+        'xgf': 45.4,
+        'hdcf': 46.15
+    })
+    t2_periods.append({
+        'cf': 56.36,
+        'xgf': 54.6,
+        'hdcf': 53.85
+    })
 
 
     data = upload_data(TEAM1_PATH)

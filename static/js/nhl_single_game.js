@@ -5,30 +5,90 @@ function get_game_stats(game_stats) {
       t1_final_stats = team1.periods[team1.periods.length - 1];
       t2_final_stats = team2.periods[team2.periods.length - 1];
 
-      //team stats
-      let cf_chart = doughnut('corsi',
-                              [t1_final_stats.cf, t2_final_stats.cf],
-                              'Shot Share',
-                              [team1.name, team2.name],
-                              [hexToRgbA(team1.colors[0], 1),hexToRgbA(team2.colors[0], 1)],
-                              'Shot Share',
-                              '5v5');
 
-      let xgf_chart = doughnut('xgf',
-                              [t1_final_stats.xgf, t2_final_stats.xgf],
-                              'Expected Goal Differential',
-                              [team1.name, team2.name],
-                              [hexToRgbA(team1.colors[0], 1),hexToRgbA(team2.colors[0], 1)],
-                              'Expected Goal Differential',
-                              '5v5');
+      let datasets = [];
+      datasets.push({
+        label: team1.name,
+        data: [t1_final_stats.cf, t1_final_stats.xgf, t1_final_stats.hdcf],
+        backgroundColor: hexToRgbA(team1.colors[0], 0.6),
+        borderColor: team1.colors[0],
+        borderWidth: 2
+      });
+      datasets.push({
+        label: team2.name,
+        data: [t2_final_stats.cf, t2_final_stats.xgf, t2_final_stats.hdcf],
+        backgroundColor: hexToRgbA(team2.colors[0], 0.6),
+        borderColor: team2.colors[0],
+        borderWidth: 2
+      });
 
-      let hdcf_chart = doughnut('hdcf',
-                              [t1_final_stats.hdcf, t2_final_stats.hdcf],
-                              'High Danger Shot Share',
-                              [team1.name, team2.name],
-                              [hexToRgbA(team1.colors[0], 1),hexToRgbA(team2.colors[0], 1)],
-                              'High Danger Shot Share',
-                              '5v5');
+      let overall_stats_chart = stacked_bar_chart('overall_stats',
+                                          'horizontalBar',
+                                          datasets,
+                                          ['Shot Share (CF%)', 'Expected Goal Differential (xGF%)', 'High Danger Shot Share (HDCF%)'],
+                                          team1.name + ' vs ' + team2.name,
+                                          '5v5',
+                                          'Natural Stat Trick (@natstattrick)');
+
+      let scatter_ds = [];
+      for(let i=0; i<team1.skaters.xgf.length; i++) {
+          let data = {
+            x: team1.name,
+            y: team1.skaters.xgf[i]
+          };
+          scatter_ds.push({
+            label: team1.skaters.names[i],
+            pointRadius: 5,
+            borderColor: team1.colors[0],
+            backgroundColor: team1.colors[0],
+            data: [data]
+          });
+      }
+      for(let i=0; i<team2.skaters.xgf.length; i++) {
+          let data = {
+            x: team2.name,
+            y: team2.skaters.xgf[i]
+          };
+          scatter_ds.push({
+            label: team2.skaters.names[i],
+            pointRadius: 5,
+            borderColor: team2.colors[0],
+            backgroundColor: team2.colors[0],
+            data: [data]
+          });
+      }
+
+      let threshold = Array(4).fill(50);
+      scatter_ds.push({
+        label: "Threshold Line",
+        fill: false,
+        borderColor: "#000",
+        backgroundColor: "#000",
+        pointRadius: 0,
+        data: threshold
+      });
+
+      x = {
+        scaleLabel: {
+          display: true,
+          labelString: 'Team',
+        }
+      };
+
+      y = {
+        scaleLabel: {
+          display: true,
+          labelString: 'xGF%',
+        }
+      };
+      line_chart_with_point_labels('xgf%',
+                ["", team1.name, team2.name, ""],
+                scatter_ds,
+                'On Ice xGF%',
+                '5v5',
+                x, y,
+                'Natural Stat Trick (@natstattrick)')
+
 
       //skater stats
       let t1_toi = bar_chart('t1_skaters_toi',

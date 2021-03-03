@@ -11,6 +11,7 @@ function get_scoring_chart(stats) {
   }
 
   let scoring_chart = stacked_bar_chart('scoring_locations',
+                                      'horizontalBar',
                                       datasets,
                                       stats.labels,
                                       stats.name + " Scoring",

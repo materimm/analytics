@@ -1,4 +1,7 @@
 import pandas as pd
+import os
+
+cwd = os.getcwd()
 
 def download_play_by_play():
     YEARS = list(range(1999, 2021)) #note end is not inclusive
@@ -21,7 +24,7 @@ def download_play_by_play():
 
         data.reset_index(drop=True, inplace=True)
 
-        filepath = r"C:\Users\MoreyMATERISE\Documents\analytics_dev\analytics\NFLData\play_by_play_" + str(i) + ".csv.gz"
+        filepath = str(cwd) + r"\NFLData\play_by_play_" + str(i) + ".csv.gz"
         #save data
         data.to_csv(filepath, compression='gzip', index=False)
 
@@ -30,7 +33,7 @@ def download_play_by_play():
 def download_nfl_logos():
     urls = pd.read_csv('https://raw.githubusercontent.com/statsbylopez/BlogPosts/master/nfl_teamlogos.csv')
 
-    filepath = r"C:\Users\MoreyMATERISE\Documents\analytics_dev\analytics\NFLData\team_logos.csv"
+    filepath = str(cwd) + r"\NFLData\team_logos.csv"
     #save data
     urls.to_csv(filepath)
     print("Logos saved")

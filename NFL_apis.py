@@ -8,7 +8,7 @@ pd.set_option('display.max_columns', 300)
 
 def get_nfl_data(season):
     if season in list(range(1999, 2021)):
-        filepath = r"C:\Users\MoreyMATERISE\Documents\analytics_dev\analytics\NFLData\play_by_play_" + str(season) + ".csv.gz"
+        filepath = r".\NFLData\play_by_play_" + str(season) + ".csv.gz"
         return pd.read_csv(filepath, compression='gzip', low_memory=False)
     else:
         print(str(season) + " not in data")

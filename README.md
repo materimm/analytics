@@ -10,6 +10,7 @@ Playing around with sports analytics and visualization
 /nhl_game  
 /nhl_team  
 /nhl_single_game
+/nhl_skater  
 
 
 ## To start server:  ##

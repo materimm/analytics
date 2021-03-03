@@ -42,6 +42,74 @@ function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_f
       scales: {
         xAxes: [xAxis],
         yAxes: [yAxis]
+      },
+    }
+  });
+}
+
+function line_chart_with_point_labels(id, labels, datasets, title, situation ,xAxis, yAxis, data_from) {
+  //show all tooltips for single game xGF% charts
+  Chart.plugins.register({
+    beforeRender: function(chart) {
+      if (chart.config.options.showAllTooltips) {
+        // create an array of tooltips,
+        // we can't use the chart tooltip because there is only one tooltip per chart
+        chart.pluginTooltips = [];
+        chart.config.data.datasets.forEach(function(dataset, i) {
+          chart.getDatasetMeta(i).data.forEach(function(sector, j) {
+            chart.pluginTooltips.push(new Chart.Tooltip({
+              _chart: chart.chart,
+              _chartInstance: chart,
+              _data: chart.data,
+              _options: chart.options.tooltips,
+              _active: [sector]
+            }, chart));
+          });
+        });
+        chart.options.tooltips.enabled = false; // turn off normal tooltips
+      }
+    },
+    afterDraw: function(chart, easing) {
+      if (chart.config.options.showAllTooltips) {
+        if (!chart.allTooltipsOnce) {
+          if (easing !== 1) {
+            return;
+          }
+          chart.allTooltipsOnce = true;
+        }
+        chart.options.tooltips.enabled = true;
+        Chart.helpers.each(chart.pluginTooltips, function(tooltip) {
+          tooltip.initialize();
+          tooltip.update();
+          tooltip.pivot();
+          tooltip.transition(easing).draw();
+        });
+        chart.options.tooltips.enabled = false;
+      }
+    }
+  });
+
+  let ctx = document.getElementById(id).getContext("2d");
+  let lineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: datasets,
+    },
+    options: {
+      title: {
+        display: true,
+        text: [title,
+              'situations: ' + situation,
+              'data: ' + data_from + ' | chart: @moman939'],
+      },
+      scales: {
+        xAxes: [xAxis],
+        yAxes: [yAxis]
+      },
+      showAllTooltips: true,
+      legend: {
+        display: false
       }
     }
   });
@@ -118,7 +186,12 @@ function bar_chart(id, type, data, data_label, labels, colors, title, situation,
         datasets: [{
           data: data,
           backgroundColor: function(context) {
-              var index = context.dataIndex;
+              let index = context.dataIndex;
+              let len = colors.length - 1;
+              if(index > len) {
+                console.log(hexToRgbA(colors[len], 0.6));
+                return hexToRgbA(colors[len], 0.6);
+              }
               return hexToRgbA(colors[index], 0.6);
           },
           borderColor: colors,
@@ -157,9 +230,9 @@ function bar_chart(id, type, data, data_label, labels, colors, title, situation,
     let bar = new Chart(ctx, config);
 }
 
-function stacked_bar_chart(id, datasets, labels, title, situation, data_from) {
+function stacked_bar_chart(id, type, datasets, labels, title, situation, data_from) {
   let config = {
-      type: 'bar',
+      type: type,
       data: {
         labels: labels,
         datasets: datasets,
