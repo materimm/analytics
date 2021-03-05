@@ -4,7 +4,7 @@ import helper as help
 
 GOALIE_PATH = './NHLData/moneypuck/20-21-goalies.csv'
 LINES_PATH = './NHLData/moneypuck/20-21-lines.csv'
-SKATERS_PATH = './NHLData/moneypuck/20-21-skaters.csv'
+SKATERS_PATH = './NHLData/moneypuck/skaters/20-21-skaters.csv'
 
 def get_skater_stats(team):
     team_abbrev = help.get_nhl_team_abbreviation(team)

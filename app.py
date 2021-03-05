@@ -11,12 +11,69 @@ import nhl_skater as nhlsk
 import nfl_qbs as qbs
 
 
+# API controllers
+import backend.nhl_apis as nhl
+import backend.nfl_apis as nfl
+
+
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return redirect(url_for('home'))
+
+@app.route('/home')
+def home():
     return render_template('home.html', **locals())
+
+############
+# API Plan #
+############
+# /team/<league>/<team>
+
+# /league/<league> (maybe make conference and division on page filters)
+
+# /players/<league>
+# /players/<league>/<player>
+# /players/<league>/<team>
+# /players/<league>/<position>
+
+# /matchup/<league>/<game> (figure some idea for the game param to identify specific games)
+
+# Note add season param later
+
+
+@app.route('/team/<league>/<team>', methods=['GET'])
+def team(league=None, team=None):
+    if league is None or team is None:
+        return redirect(url_for('home'))
+    if league=='NHL':
+        nhl_team_stats = nhl.get_team_stats(team)
+        return render_template('nhl_team2.html', **locals())
+    elif league=='NFL':
+        nfl_team_stats = nfl.get_team_stats(team)
+        return render_template('nfl_team2.html', **locals())
+    else:
+        return redirect(url_for('home'))
+
+
+@app.route('/league/<league>', methods=['GET'])
+def league(league=None, team=None):
+    if league is None or team is None:
+        return redirect(url_for('home'))
+    if league=='NHL':
+        league_stats = nhl.get_league_stats()
+        return render_template('nhl_league.html', **locals())
+    elif league=='NFL':
+        league_stats = nfl.get_team_stats()
+        return render_template('nfl_league.html', **locals())
+    else:
+        return redirect(url_for('home'))
+
+
+
+
 
 
 @app.route('/pdo', methods=['GET'])
