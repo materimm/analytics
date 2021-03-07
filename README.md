@@ -18,6 +18,8 @@ flask
 requests
 bs4
 selenium  
+sklearn  
+matplotlib  
 
 ## To start server:  ##
 cd Documents/analytics_dev/analytics

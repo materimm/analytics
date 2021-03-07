@@ -104,10 +104,10 @@ def grid_search():
     grid = dict()
     grid['n_estimators'] = [10, 50, 100, 500]
     grid['learning_rate'] = [0.0001, 0.001, 0.01, 0.1, 1.0]
-    grid['subsample'] = [0.5, 0.7, 1.0]
-    grid['max_depth'] = [3, 7, 9]
+    grid['subsample'] = [0.3, 0.5, 0.7, 1.0]
+    grid['max_depth'] = [2, 3, 4, 7, 9]
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    grid_search = GridSearchCV(estimator=model, param_grad=grid, n_jobs=-1, cv=cv, scoring='neg_mean_absolute_error')
+    grid_search = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, cv=cv, scoring='neg_mean_absolute_error')
     grid_result = grid_search.fit(input, output)
     print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
     means = grid_result.cv_results_['mean_test_score']
@@ -126,7 +126,7 @@ def evaluate_model(model, input, output):
 
 def xgoal():
     input, output = setup_data()
-    models = get_models_learning_rate()
+    models = get_models_tree_depth()
     results, names = list(), list()
     for name, model in models.items():
         scores = evaluate_model(model, input, output)
@@ -139,8 +139,8 @@ def xgoal():
 
 
 if __name__ == '__main__':
-    xgoal()
-    #grid_search()
+    #xgoal()
+    grid_search()
 
 
 
