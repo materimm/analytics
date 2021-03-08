@@ -4,7 +4,7 @@ import os
 import backend.helper as help
 
 
-base_dir = str(Path(os.getcwd()))
+base_dir = str(Path(os.getcwd())) #.parents[0])
 
 # @param team - 3 letter code for team. aka BUF for the Buffalo Sabres
 def get_team_stats(team):
@@ -23,7 +23,6 @@ def get_league_stats(start_season, end_season, filter='all'):
     all_dates = []
     for team in teams:
         rolling_xgf[team] = get_rolling_xGF(team, start_season, end_season)
-        print(str(rolling_xgf[team]))
         all_dates = all_dates + rolling_xgf[team].get('dates')
     all_dates = list(set(all_dates))
     all_dates.sort()
@@ -34,6 +33,7 @@ def get_league_stats(start_season, end_season, filter='all'):
         'goal_share': goal_share,
         'xgoal_share': xgoal_share,
         'colors': help.get_all_nhl_colors(),
+        'logos': help.get_all_nhl_logos(),
         'teams': teams
     }
 
@@ -67,16 +67,17 @@ def get_goal_share(teams, start_season, end_season, is_expected):
     data = data.loc[(data.season >= start_season)  & (data.season <= end_season)]
     data = data.loc[data.situation=='5on5']
     data = data.groupby(['team'], as_index=False).agg({gf_label:'mean', ga_label:'mean', 'iceTime': 'sum'})
-    print(str(data))
     goal_share = {}
     for team in teams:
+        team_label = team
+        team = team[:1] + "." + team[-1:] if len(team) == 2 else team
         df = data.loc[data.team==team]
-        for index, row in data.iterrows():
+        for index, row in df.iterrows():
             r = row.to_dict()
             gf = r.get(gf_label)
             ga = r.get(ga_label)
             toi = r.get('iceTime') / 60 # convert from seconds to minutes
-            goal_share[team] = {
+            goal_share[team_label] = {
                 'gf60': help.get_per_60(gf, toi),
                 'ga60': help.get_per_60(ga, toi)
             }
@@ -84,6 +85,6 @@ def get_goal_share(teams, start_season, end_season, is_expected):
     return goal_share
 
 
-# if __name__ == '__main__':
-#     r = get_league_stats(2019, 2020)
-#     print(str(r))
+if __name__ == '__main__':
+    r = get_league_stats(2019, 2020)
+    print(str(r))

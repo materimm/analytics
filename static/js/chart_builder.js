@@ -116,11 +116,23 @@ function line_chart_with_point_labels(id, labels, datasets, title, situation ,xA
 }
 
 
-function scatter_chart(id, data, title, situation, xLabel, yLabel) {
+function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs) {
   let ctx = document.getElementById(id).getContext("2d");
   let scatter = new Chart(ctx, {
       type: 'scatter',
       data: data,
+      plugins: {
+        afterUpdate: chart => {
+          for(let i=0; i<data.datasets.length; i++) {
+            const img = new Image();
+            let l = data.datasets[i].label;
+            img.src = imgs[l];
+            img.width=50;
+            img.height=50;
+            chart.getDatasetMeta(i).data.forEach((d, j) => d._model.pointStyle = img);
+          }
+        }
+      },
       options: {
         title: {
           display: true,

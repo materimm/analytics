@@ -8,7 +8,7 @@
 
 function drawCharts(league_stats) {
   drawRollingxGF(league_stats.rolling_xgf, league_stats.teams, league_stats.colors);
-  drawGoalShare(league_stats.goal_share, league_stats.teams, league_stats.colors);
+  drawGoalShare(league_stats.goal_share, league_stats.teams, league_stats.colors, league_stats.logos);
 }
 
 function drawRollingxGF(rolling_xGF_objs, teams, colors) {
@@ -82,13 +82,12 @@ function drawRollingxGF(rolling_xGF_objs, teams, colors) {
 
 }
 
-function drawGoalShare(goal_share, teams, colors) {
+function drawGoalShare(goal_share, teams, colors, logos) {
   let datasets = []
+  //let all_gf=[]
   for(let i=0; i<teams.length; i++) {
       let t = teams[i];
       let goal_share_obj = goal_share[t];
-      console.log(t);
-      console.log(goal_share_obj);
       let data = {
         x: goal_share_obj.gf60,
         y: goal_share_obj.ga60,
@@ -100,8 +99,32 @@ function drawGoalShare(goal_share, teams, colors) {
         backgroundColor: colors[t][0],
         data: [data]
       });
+
+      //all_gf.push(goal_share_obj.gf60);
   }
 
+  //all_gf.sort();
   let scatterData = {datasets};
-  scatter_chart('goal_share_chart', scatterData, 'Goal Share', '5v5', 'GF/60', 'GA/60');
+  scatter_chart('goal_share_chart', scatterData, 'Goal Share', '5v5', 'GF/60', 'GA/60', logos);
+
+  // x = {
+  //   scaleLabel: {
+  //     display: true,
+  //     labelString: 'Goals For per 60',
+  //   }
+  // };
+  //
+  // y = {
+  //   scaleLabel: {
+  //     display: true,
+  //     labelString: 'Goals Against per 60',
+  //   }
+  // };
+  // line_chart_with_point_labels('goal_share_chart',
+  //           all_gf,
+  //           datasets,
+  //           'On Ice xGF%',
+  //           '5v5',
+  //           x, y,
+  //           'moneypuck.com')
 }
