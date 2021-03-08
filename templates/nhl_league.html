@@ -3,13 +3,27 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1>League data</h1>
-
-  {{league_stats}}
-
+  <p id="data" style="display:none">{{league_stats}}</p>
+  <div class="container">
+    <div class="row mb-1">
+      <h1>League data</h1>
+    </div>
+    <div class="row mb-1">
+      <button type="button" class="btn btn-primary" onclick="drawCharts({{ league_stats }})">draw</button>
+    </div>
+    <div class="row mb-1">
+      <canvas id="rolling_xGF_chart"></canvas>
+    </div>
+    <div class="row mb-1">
+      <canvas id="goal_share_chart"></canvas>
+    </div>
+    <div class="row mb-1">
+      <canvas id="xgoal_share_chart"></canvas>
+    </div>
+  </div>
 {% endblock %}
 {% block scripts %}
   {{ super() }}
   <!-- Custom JavaScript -->
-  <script src="{{ url_for('static', filename='js/nhl_game.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/nhl_league.js') }}"></script>
 {% endblock %}

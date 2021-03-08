@@ -20,13 +20,21 @@ def get_league_stats(start_season, end_season, filter='all'):
     rolling_xgf = {}
     goal_share = get_goal_share(teams, start_season, end_season, False)
     xgoal_share = get_goal_share(teams, start_season, end_season, True)
+    all_dates = []
     for team in teams:
         rolling_xgf[team] = get_rolling_xGF(team, start_season, end_season)
+        print(str(rolling_xgf[team]))
+        all_dates = all_dates + rolling_xgf[team].get('dates')
+    all_dates = list(set(all_dates))
+    all_dates.sort()
+    rolling_xgf['all_dates'] = all_dates
 
     return {
         'rolling_xgf': rolling_xgf,
         'goal_share': goal_share,
-        'xgoal_share': xgoal_share
+        'xgoal_share': xgoal_share,
+        'colors': help.get_all_nhl_colors(),
+        'teams': teams
     }
 
 
@@ -38,8 +46,9 @@ def get_rolling_xGF(team, start_season, end_season):
     xGFs = []
     for index, row in game_data.iterrows():
         r = row.to_dict()
-        dates.append(r.get('gameDate'))
-        xGFs.append(r.get('xGoalsPercentage'))
+        date = str(r.get('gameDate'))
+        dates.append(date[4:6] + "/" + date[-2:] + "/" + date[:4])
+        xGFs.append(r.get('xGoalsPercentage') * 100)
     xGFs = help.get_5_game_rolling_average(xGFs)
     return {
         'xgf': xGFs,
