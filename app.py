@@ -1,4 +1,11 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for
+
+# API controllers
+import backend.nhl_apis as nhl
+import backend.nfl_apis as nfl
+
+
+
 import api_controller as api
 # NHL imports
 import nhl_game_scraper as ngs
@@ -10,10 +17,6 @@ import nhl_skater as nhlsk
 #NFL imports
 import nfl_qbs as qbs
 
-
-# API controllers
-import backend.nhl_apis as nhl
-import backend.nfl_apis as nfl
 
 
 
@@ -59,19 +62,17 @@ def team(league=None, team=None):
 
 
 @app.route('/league/<league>', methods=['GET'])
-def league(league=None, team=None):
-    if league is None or team is None:
+def league(league=None):
+    if league is None:
         return redirect(url_for('home'))
     if league=='NHL':
-        league_stats = nhl.get_league_stats()
+        league_stats = nhl.get_league_stats(2020, 2020)
         return render_template('nhl_league.html', **locals())
     elif league=='NFL':
         league_stats = nfl.get_team_stats()
         return render_template('nfl_league.html', **locals())
     else:
         return redirect(url_for('home'))
-
-
 
 
 

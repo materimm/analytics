@@ -1,6 +1,9 @@
 import json
 import pandas as pd
 import os
+from pathlib import Path
+
+base_dir = str(Path(os.getcwd()))
 
 #############
 #### NHL ####
@@ -13,10 +16,21 @@ def get_nhl_team_colors(team_name):
 
     return colors
 
+
 def get_nhl_team_abbreviation(team_name):
     with open('./static/json/team_abbrevs.json') as teams_file:
         teams = json.load(teams_file)
     return teams[team_name]
+
+
+def get_teams(key):
+    with open(base_dir + '/static/json/nhl_teams.json') as teams_file:
+        t = json.load(teams_file)
+    return t[key]
+
+
+def get_per_60(stat, toi):
+    return round((stat*60)/toi, 2)
 
 
 #############
