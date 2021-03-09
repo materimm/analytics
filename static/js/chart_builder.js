@@ -24,13 +24,28 @@ function radar_chart(id, labels, datasets, title, situation) {
 }
 
 
-function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_from) {
+function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_from, imgs) {
   let ctx = document.getElementById(id).getContext("2d");
   let lineChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
       datasets: datasets,
+    },
+    plugins: {
+      afterUpdate: chart => {
+        for(let i=0; i<datasets.length; i++) {
+          const img = new Image();
+          let l = datasets[i].label;
+          if(l ==  "Threshold Line") {
+            continue;
+          }
+          img.src = imgs[l];
+          img.width = 35;
+          img.height = (35/3) * 2;
+          chart.getDatasetMeta(i).data.forEach((d, j) => d._model.pointStyle = img);
+        }
+      }
     },
     options: {
       title: {
@@ -127,13 +142,16 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs) {
             const img = new Image();
             let l = data.datasets[i].label;
             img.src = imgs[l];
-            img.width=50;
-            img.height=50;
+            img.width = 50;
+            img.height = 100/3;
             chart.getDatasetMeta(i).data.forEach((d, j) => d._model.pointStyle = img);
           }
         }
       },
       options: {
+        legend: {
+          display: false
+        },
         title: {
           display: true,
           text: [title,
@@ -273,4 +291,32 @@ function stacked_bar_chart(id, type, datasets, labels, title, situation, data_fr
 
     let ctx = document.getElementById(id).getContext('2d');
     let bar = new Chart(ctx, config);
+}
+
+function resizeImg() {
+    let maxWidth = 35; // Max width for the image
+    let maxHeight = 35;    // Max height for the image
+    let ratio = 0;  // Used for aspect ratio
+    let width = 150;    // Current image width
+    let height = 100;  // Current image height
+
+    // Check if the current width is larger than the max
+    if(width > maxWidth){
+        ratio = maxWidth / width;   // get ratio for scaling image
+        //$(this).css("width", maxWidth); // Set new width
+        //$(this).css("height", height * ratio);  // Scale height based on ratio
+        height = height * ratio;    // Reset height to match scaled image
+        width = width * ratio;    // Reset width to match scaled image
+    }
+
+    // Check if current height is larger than max
+    if(height > maxHeight){
+        ratio = maxHeight / height; // get ratio for scaling image
+        //$(this).css("height", maxHeight);   // Set new height
+        //$(this).css("width", width * ratio);    // Scale width based on ratio
+        width = width * ratio;    // Reset width to match scaled image
+        height = height * ratio;    // Reset height to match scaled image
+    }
+
+    return [width, height];
 }

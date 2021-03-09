@@ -3,13 +3,13 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <p id="data" style="display:none">{{league_stats}}</p>
   <div class="container">
     <div class="row mb-1">
       <h1>League data</h1>
     </div>
     <div class="row mb-1">
-      <button type="button" class="btn btn-primary" onclick="drawCharts({{ league_stats }})">draw</button>
+      <div class="col"><button type="button" class="btn btn-primary" onclick="drawCharts({{ league_stats }})">draw</button></div>
+      <div class="col"></div>
     </div>
     <div class="row mb-1">
       <canvas id="rolling_xGF_chart"></canvas>

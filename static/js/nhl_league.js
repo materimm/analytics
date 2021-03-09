@@ -7,11 +7,14 @@
 // });
 
 function drawCharts(league_stats) {
-  drawRollingxGF(league_stats.rolling_xgf, league_stats.teams, league_stats.colors);
-  drawGoalShare(league_stats.goal_share, league_stats.teams, league_stats.colors, league_stats.logos);
+  teams = league_stats.teams;
+  colors = league_stats.colors;
+  logos = league_stats.logos;
+  drawRollingxGF(league_stats.rolling_xgf, teams, colors, logos);
+  drawGoalShare(league_stats.goal_share, teams, colors, logos);
 }
 
-function drawRollingxGF(rolling_xGF_objs, teams, colors) {
+function drawRollingxGF(rolling_xGF_objs, teams, colors, logos) {
   let all_dates = rolling_xGF_objs.all_dates;
 
   let new_dates = [];
@@ -78,7 +81,8 @@ function drawRollingxGF(rolling_xGF_objs, teams, colors) {
             datasets,
             'Rolling 5 game xGF% Average',
             '5v5', x, y,
-            'moneypuck.com')
+            'moneypuck.com',
+            logos);
 
 }
 
