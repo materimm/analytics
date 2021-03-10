@@ -68,6 +68,8 @@ def get_goal_share(teams, start_season, end_season, is_expected):
     data = data.loc[data.situation=='5on5']
     data = data.groupby(['team'], as_index=False).agg({gf_label:'mean', ga_label:'mean', 'iceTime': 'sum'})
     goal_share = {}
+    all_gf = []
+    all_ga = []
     for team in teams:
         team_label = team
         team = team[:1] + "." + team[-1:] if len(team) == 2 else team
@@ -77,10 +79,18 @@ def get_goal_share(teams, start_season, end_season, is_expected):
             gf = r.get(gf_label)
             ga = r.get(ga_label)
             toi = r.get('iceTime') / 60 # convert from seconds to minutes
+            gf60 = help.get_per_60(gf, toi)
+            ga60 = help.get_per_60(ga, toi)
             goal_share[team_label] = {
-                'gf60': help.get_per_60(gf, toi),
-                'ga60': help.get_per_60(ga, toi)
+                'gf60': gf60,
+                'ga60': ga60
             }
+            all_gf.append(gf60)
+            all_ga.append(ga60)
+    goal_share['avg'] = {
+        'gf60' : sum(all_gf) / len(all_gf),
+        'ga60' : sum(all_ga) / len(all_ga)
+    }
 
     return goal_share
 

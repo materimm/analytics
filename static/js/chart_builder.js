@@ -131,12 +131,39 @@ function line_chart_with_point_labels(id, labels, datasets, title, situation ,xA
 }
 
 
-function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs) {
+function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, avg_y) {
   let ctx = document.getElementById(id).getContext("2d");
   let scatter = new Chart(ctx, {
       type: 'scatter',
       data: data,
       plugins: {
+        beforeDraw: chart => {
+          var chartArea = chart.chartArea;
+          var ctx = chart.chart.ctx;
+
+          // Replace these IDs if you have given your axes IDs in the config
+          var xScale = chart.scales['x-axis-1'];
+          var yScale = chart.scales['y-axis-1'];
+
+          var midX = xScale.getPixelForValue(avg_x);
+          var midY = yScale.getPixelForValue(avg_y);
+
+          // Top left quadrant
+          ctx.fillStyle = "rgba(0, 123, 255, 0.6)";
+          ctx.fillRect(chartArea.left, chartArea.top, midX - chartArea.left, midY - chartArea.top);
+
+          // Top right quadrant
+          ctx.fillStyle = "rgba(40, 167, 69, 0.6)";
+          ctx.fillRect(midX, chartArea.top, chartArea.right - midX, midY - chartArea.top);
+
+          // Bottom right quadrant
+          ctx.fillStyle = "rgba(255, 193, 7, 0.6)";
+          ctx.fillRect(midX, midY, chartArea.right - midX, chartArea.bottom - midY);
+
+          // Bottom left quadrant
+          ctx.fillStyle = "rgba(220, 53, 69, 0.6)";
+          ctx.fillRect(chartArea.left, midY, midX - chartArea.left, chartArea.bottom - midY);
+        },
         afterUpdate: chart => {
           for(let i=0; i<data.datasets.length; i++) {
             const img = new Image();
@@ -169,6 +196,9 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs) {
             scaleLabel: {
               display: true,
               labelString: yLabel,
+            },
+            ticks: {
+              reverse: true
             }
           }],
         }

@@ -3,9 +3,9 @@ Playing around with sports analytics and visualization
 
 
 ## pages:  ##
-/pdo  
-/radar  
-/player_score  
+/league/NHL  
+/league/NFL  
+  
 /nfl  
 /nhl_game  
 /nhl_team  

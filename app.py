@@ -4,14 +4,9 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for
 import backend.nhl_apis as nhl
 import backend.nfl_apis as nfl
 
-
-
-import api_controller as api
 # NHL imports
 import nhl_game_scraper as ngs
-import nhl_teams as nhlt
 import nhl_single_game as nhlsg
-import nhl_single_team as nhlst
 import nhl_skater as nhlsk
 
 #NFL imports

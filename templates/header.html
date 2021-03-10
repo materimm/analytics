@@ -3,26 +3,11 @@
     <a class="navbar-brand" href="#">Analytics</a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="{{ url_for('nhl_team') }}">NHL Team</a>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('league', league='NHL') }}">NHL</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('nhl_game') }}">NHL Game</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('nhl_single_game') }}">NHL Single Game</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('nhl_single_team') }}">NHL Single Team</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('nhl_skater') }}">NHL Skater</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('nfl') }}">NFL</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('nfl_qbs') }}">NFL QBs</a>
+          <a class="nav-link" href="{{ url_for('nfl', league='NFL') }}">NFL</a>
         </li>
       </ul>
     </div>
