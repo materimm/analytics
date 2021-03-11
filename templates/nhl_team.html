@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='css/color_scale.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-2"><img src="{{team_stats.logo}}"/></div>
+      <div class="col"><h1>{{team_stats.name}}</h1></div>
+      <div class="col-5"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card scale-{{team_stats.gf_rank}}">
+          <div class="card-header text-center">GF</div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{team_stats.gf}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.ga_rank}}">
+          <div class="card-header text-center">GA</div>
+          <div class="card-body text-center">
+            <p id="ga" class="card-text">{{team_stats.ga}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.gf_percent_rank}}">
+          <div class="card-header text-center">GF%</div>
+          <div class="card-body text-center">
+            <p id="gfp" class="card-text">{{team_stats.gf_percent}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.pp_percent_rank}}">
+          <div class="card-header text-center">PP%</div>
+          <div class="card-body text-center">
+            <p id="ppp" class="card-text">{{team_stats.pp_percent}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.pk_percent_rank}}">
+          <div class="card-header text-center">PK%</div>
+          <div class="card-body text-center">
+            <p id="pkp" class="card-text">{{team_stats.pk_percent}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card scale-{{team_stats.xgf_rank}}">
+          <div class="card-header text-center">xGF</div>
+          <div class="card-body text-center">
+            <p id="xgf" class="card-text">{{team_stats.xgf}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.xga_rank}}">
+          <div class="card-header text-center">xGA</div>
+          <div class="card-body text-center">
+            <p id="xga" class="card-text">{{team_stats.xga}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.xgf_percent_rank}}">
+          <div class="card-header text-center">xGF%</div>
+          <div class="card-body text-center">
+            <p id="xgfp" class="card-text">{{team_stats.xgf_percent}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card scale-{{team_stats.corsi_rank}}">
+          <div class="card-header text-center">CF%</div>
+          <div class="card-body text-center">
+            <p id="cfp" class="card-text">{{team_stats.corsi_percent}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col"></div>
+      <div class="col-6"></div>
+    </div>
+    <div class="row">
+      <div class="col"><button id="flipCardsButton" type="button" class="btn btn-primary" onclick="flipCards( {{team_stats}} )">Show Ranks</button></div>
+      <div class="col"></div>
+    </div>
+    {{team_stats}}
+  </div>
+
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nhl_team.js') }}"></script>
+{% endblock %}

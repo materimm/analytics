@@ -39,30 +39,21 @@ def home():
 
 # /matchup/<league>/<game> (figure some idea for the game param to identify specific games)
 
-# Note add season param later
 
 
-@app.route('/team/<league>/<team>', methods=['GET'])
-def team(league=None, team=None):
-    if league is None or team is None:
-        return redirect(url_for('home'))
-    if league=='NHL':
-        nhl_team_stats = nhl.get_team_stats(team)
-        return render_template('nhl_team2.html', **locals())
-    elif league=='NFL':
-        nfl_team_stats = nfl.get_team_stats(team)
-        return render_template('nfl_team2.html', **locals())
-    else:
-        return redirect(url_for('home'))
-
-
-@app.route('/league/<league>', methods=['GET'])
-def league(league=None):
+@app.route('/league/<league>', methods=['GET'], defaults={'team': None})
+@app.route('/league/<league>/<team>', methods=['GET'])
+def league(league=None, team=None):
     if league is None:
         return redirect(url_for('home'))
     if league=='NHL':
-        league_stats = nhl.get_league_stats(2020, 2020)
-        return render_template('nhl_league.html', **locals())
+        if team==None:
+            league_stats = nhl.get_league_stats(2020, 2020)
+            return render_template('nhl_league.html', **locals())
+        else:
+            team_stats = nhl.get_team_stats(team, 2020)
+            print(str(team_stats))
+            return render_template('nhl_team.html', **locals())
     elif league=='NFL':
         league_stats = nfl.get_team_stats()
         return render_template('nfl_league.html', **locals())

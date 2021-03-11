@@ -149,19 +149,19 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, 
           var midY = yScale.getPixelForValue(avg_y);
 
           // Top left quadrant
-          ctx.fillStyle = "rgba(0, 123, 255, 0.6)";
+          ctx.fillStyle = "rgba(184, 203, 233, 1)";
           ctx.fillRect(chartArea.left, chartArea.top, midX - chartArea.left, midY - chartArea.top);
 
           // Top right quadrant
-          ctx.fillStyle = "rgba(40, 167, 69, 0.6)";
+          ctx.fillStyle = "rgba(89, 138, 197, 1)";
           ctx.fillRect(midX, chartArea.top, chartArea.right - midX, midY - chartArea.top);
 
           // Bottom right quadrant
-          ctx.fillStyle = "rgba(255, 193, 7, 0.6)";
+          ctx.fillStyle = "rgba(250, 220, 222, 1)";
           ctx.fillRect(midX, midY, chartArea.right - midX, chartArea.bottom - midY);
 
           // Bottom left quadrant
-          ctx.fillStyle = "rgba(220, 53, 69, 0.6)";
+          ctx.fillStyle = "rgba(248, 105, 111, 1)";
           ctx.fillRect(chartArea.left, midY, midX - chartArea.left, chartArea.bottom - midY);
         },
         afterUpdate: chart => {

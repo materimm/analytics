@@ -7,10 +7,131 @@ import backend.helper as help
 base_dir = str(Path(os.getcwd())) #.parents[0])
 
 # @param team - 3 letter code for team. aka BUF for the Buffalo Sabres
-def get_team_stats(team):
-    data_5v5 = help.upload_data(base_dir + r'\NHLData\Natural-Stat-Trick\all_teams_5v5.csv')
-    data_pp = help.upload_data(base_dir + r'\NHLData\Natural-Stat-Trick\all_teams_PP.csv')
-    data_pk = help.upload_data(base_dir + r'\NHLData\Natural-Stat-Trick\all_teams_PK.csv')
+def get_team_stats(team, season):
+    team_filter = team
+    if len(team) == 2:
+        team_filter = team[0] + '.' + team[1]
+    data = help.upload_data(base_dir + '\\NHLData\\moneypuck\\overall\\teams-' + str(season) + '.csv')
+    team_data = data.loc[data.team==team_filter]
+    for index, row in team_data.iterrows():
+        r = row.to_dict()
+        if r.get('situation')=='5on5':
+            gf = r.get('goalsFor')
+            ga = r.get('goalsAgainst')
+            gf_percent = round((gf / (gf + ga))*100, 2)
+            xgf = r.get('xGoalsFor')
+            xga = r.get('xGoalsAgainst')
+            xgf_percent = r.get('xGoalsPercentage')
+            corsi_percent = r.get('corsiPercentage')
+            penalites_for = r.get('penaltiesFor')
+            penalites_against = r.get('penaltiesAgainst')
+            gax = gf - xgf
+            gsax = xga - ga
+        elif r.get('situation')=='5on4':
+            #power play
+            pp_goals = r.get('goalsFor')
+
+        elif r.get('situation')=='4on5':
+            #penalty kill
+            pk_goals = r.get('goalsAgainst')
+
+    pp_percent = round(pp_goals/penalites_for, 2)
+    pk_percent = round(float(pk_goals/penalites_against), 2)
+
+    five_v_five_data = data.loc[data.situation=='5on5']
+
+    all_xgfs = five_v_five_data['xGoalsFor'].tolist()
+    all_goals_for = five_v_five_data['goalsFor'].tolist()
+
+    #goals above expected ranking
+    all_gax = []
+    for axgf, agf in zip(all_xgfs, all_goals_for):
+        all_gax.append(agf - axgf)
+    all_gax.sort(reverse=True)
+    gax_rank = all_gax.index(gax) + 1
+
+    all_xgas = five_v_five_data['xGoalsAgainst'].tolist()
+    all_goals_against = five_v_five_data['goalsAgainst'].tolist()
+
+    #goals saved above expected ranking
+    all_gsax = []
+    for axga, aga in zip(all_xgas, all_goals_against):
+        all_gsax.append(axga - aga)
+    all_gsax.sort(reverse=True)
+    gsax_rank = all_gsax.index(gsax) + 1
+
+    #corsi rank
+    corsis = five_v_five_data['corsiPercentage'].tolist()
+    corsis.sort(reverse=True)
+    corsi_rank = corsis.index(corsi_percent) + 1
+
+    #expected goals for % rank
+    xgf_percents = five_v_five_data['xGoalsPercentage'].tolist()
+    xgf_percents.sort(reverse=True)
+    xgf_percent_rank = xgf_percents.index(xgf_percent) + 1
+
+    #expected goals for and against ranks
+    all_xgfs.sort(reverse=True)
+    xgf_rank = all_xgfs.index(xgf) + 1
+    all_xgas.sort()
+    xga_rank = all_xgas.index(xga) + 1
+
+    #goals for and against ranks
+    all_gf_percents = []
+    for agf, aga in zip(all_goals_for, all_goals_against):
+        all_gf_percents.append(round((agf / (agf + aga))*100, 2))
+    all_gf_percents.sort(reverse=True)
+    gf_percent_rank = all_gf_percents.index(gf_percent) + 1
+    all_goals_for.sort(reverse=True)
+    gf_rank = all_goals_for.index(gf) + 1
+    all_goals_against.sort()
+    ga_rank = all_goals_against.index(ga) + 1
+
+    penalties_for = five_v_five_data['penaltiesFor'].tolist()
+    penalties_against = five_v_five_data['penaltiesAgainst'].tolist()
+    pp_data = data.loc[data.situation=='5on4']
+    pp_goals = pp_data['goalsFor'].tolist()
+    pk_data = data.loc[data.situation=='4on5']
+    pk_goals = pk_data['goalsAgainst'].tolist()
+
+    #PP and PK ranks
+    pp_percentages = []
+    for goals, pens in zip(pp_goals, penalties_for):
+        pp_percentages.append(round(goals/pens, 2))
+    pk_percentages = []
+    for goals, pens in zip(pk_goals, penalties_against):
+        pk_percentages.append(round(goals/pens, 2))
+    pp_percentages.sort(reverse=True)
+    pk_percentages.sort(reverse=True)
+    pp_percent_rank = pp_percentages.index(pp_percent) + 1
+    pk_percent_rank = pk_percentages.index(pk_percent) + 1
+
+    return {
+        'name': help.get_full_nhl_team_name(team),
+        'gf': gf,
+        'gf_rank': gf_rank,
+        'ga': ga,
+        'ga_rank': ga_rank,
+        'gf_percent': gf_percent,
+        'gf_percent_rank': gf_percent_rank,
+        'xgf': xgf,
+        'xgf_rank': xgf_rank,
+        'xga': xga,
+        'xga_rank': xga_rank,
+        'xgf_percent': xgf_percent,
+        'xgf_percent_rank': xgf_percent_rank,
+        'corsi_percent': '%.2f' % (corsi_percent * 100),
+        'corsi_rank': corsi_rank,
+        'pp_percent': '%.2f' % (pp_percent * 100),
+        'pp_percent_rank': pp_percent_rank,
+        'pk_percent': '%.2f' % (pk_percent * 100),
+        'pk_percent_rank': pk_percent_rank,
+        'gax': '%.2f' % (gax),
+        'gax_rank': gax_rank,
+        'gsax': '%.2f' % (gsax),
+        'gsax_rank': gsax_rank,
+        'logo': help.get_all_nhl_logos()[team]
+    }
 
 
 def get_league_stats(start_season, end_season, filter='all'):
@@ -95,6 +216,7 @@ def get_goal_share(teams, start_season, end_season, is_expected):
     return goal_share
 
 
-if __name__ == '__main__':
-    r = get_league_stats(2019, 2020)
-    print(str(r))
+#if __name__ == '__main__':
+    #r = get_league_stats(2019, 2020)
+    #r = get_team_stats('BUF', 2020)
+    #print(str(r))
