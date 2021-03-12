@@ -7,9 +7,9 @@
 // });
 
 function drawCharts(league_stats) {
-  teams = league_stats.teams;
-  colors = league_stats.colors;
-  logos = league_stats.logos;
+  let teams = league_stats.teams;
+  let colors = league_stats.colors;
+  let logos = league_stats.logos;
   drawRollingxGF(league_stats.rolling_xgf, teams, colors, logos);
   drawGoalShare(league_stats.goal_share, teams, colors, logos, false)
   drawGoalShare(league_stats.xgoal_share, teams, colors, logos, true);

@@ -1,117 +1,178 @@
 {% extends "base.html" %}
 {% block head %}
   {{ super() }}
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
   <link href="{{ url_for('static', filename='css/color_scale.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/cards.css') }}" rel="stylesheet">
 {% endblock %}
 {% block content %}
   <div class="container">
+    <!-- Card section header -->
     <div class="row mb-3">
       <div class="col-2"><img src="{{team_stats.logo}}"/></div>
-      <div class="col"><h1>{{team_stats.name}}</h1></div>
+      <div class="col">
+        <div class="row">
+          <h1><span>{{team_stats.name}}</span></h1>
+        </div>
+        <div class="row"><span>Season: {{team_stats.season}}</span></div>
+      </div>
       <div class="col-5"></div>
     </div>
+
+
     <div class="row mb-2">
+      <!-- Card section -->
       <div class="col">
-        <div class="card scale-{{team_stats.gf_rank}}">
-          <div class="card-header text-center">GF</div>
-          <div class="card-body text-center">
-            <p id="gf" class="card-text">{{team_stats.gf}}</p>
+        <!-- top row of cards -->
+        <div class="row mb-2">
+          <div class="col">
+            <div class="card scale-{{team_stats.gf_rank}}">
+              <div class="card-header text-center"><span>GF</span></div>
+              <div class="card-body text-center">
+                <p id="gf" class="card-text">{{team_stats.gf}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.ga_rank}}">
+              <div class="card-header text-center"><span>GA</span></div>
+              <div class="card-body text-center">
+                <p id="ga" class="card-text">{{team_stats.ga}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.gf_percent_rank}}">
+              <div class="card-header text-center"><span>GF%</span></div>
+              <div class="card-body text-center">
+                <p id="gfp" class="card-text">{{team_stats.gf_percent}}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.pp_percent_rank}}">
+              <div class="card-header text-center"><span>PP%</span></div>
+              <div class="card-body text-center">
+                <p id="ppp" class="card-text">{{team_stats.pp_percent}}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.pk_percent_rank}}">
+              <div class="card-header text-center"><span>PK%</span></div>
+              <div class="card-body text-center">
+                <p id="pkp" class="card-text">{{team_stats.pk_percent}}%</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.ga_rank}}">
-          <div class="card-header text-center">GA</div>
-          <div class="card-body text-center">
-            <p id="ga" class="card-text">{{team_stats.ga}}</p>
+        <!-- middle row of cards -->
+        <div class="row mb-2">
+          <div class="col">
+            <div class="card scale-{{team_stats.xgf_rank}}">
+              <div class="card-header text-center"><span>xGF</span></div>
+              <div class="card-body text-center">
+                <p id="xgf" class="card-text">{{team_stats.xgf}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.xga_rank}}">
+              <div class="card-header text-center"><span>xGA</span></div>
+              <div class="card-body text-center">
+                <p id="xga" class="card-text">{{team_stats.xga}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.xgf_percent_rank}}">
+              <div class="card-header text-center"><span>xGF%</span></div>
+              <div class="card-body text-center">
+                <p id="xgfp" class="card-text">{{team_stats.xgf_percent}}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.gax_rank}}">
+              <div class="card-header text-center"><span>GAx</span></div>
+              <div class="card-body text-center">
+                <p id="gax" class="card-text">{{team_stats.gax}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.gsax_rank}}">
+              <div class="card-header text-center"><span>GSAx</span></div>
+              <div class="card-body text-center">
+                <p id="gsax" class="card-text">{{team_stats.gsax}}</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.gf_percent_rank}}">
-          <div class="card-header text-center">GF%</div>
-          <div class="card-body text-center">
-            <p id="gfp" class="card-text">{{team_stats.gf_percent}}</p>
+        <!-- bottom card row -->
+        <div class="row mb-2">
+          <div class="col">
+            <div class="card scale-{{team_stats.sf_rank}}">
+              <div class="card-header text-center"><span>SF</span></div>
+              <div class="card-body text-center">
+                <p id="sf" class="card-text">{{team_stats.sf}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.sa_rank}}">
+              <div class="card-header text-center"><span>SA</span></div>
+              <div class="card-body text-center">
+                <p id="sa" class="card-text">{{team_stats.sa}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.corsi_rank}}">
+              <div class="card-header text-center"><span>CF%</span></div>
+              <div class="card-body text-center">
+                <p id="cfp" class="card-text">{{team_stats.corsi_percent}}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.shooting_percent_rank}}">
+              <div class="card-header text-center"><span>SH%</span></div>
+              <div class="card-body text-center">
+                <p id="sh_percent" class="card-text">{{team_stats.shooting_percent}}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.save_percent_rank}}">
+              <div class="card-header text-center"><span>SV%</span></div>
+              <div class="card-body text-center">
+                <p id="save_percent" class="card-text">{{team_stats.save_percent}}%</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.pp_percent_rank}}">
-          <div class="card-header text-center">PP%</div>
-          <div class="card-body text-center">
-            <p id="ppp" class="card-text">{{team_stats.pp_percent}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.pk_percent_rank}}">
-          <div class="card-header text-center">PK%</div>
-          <div class="card-body text-center">
-            <p id="pkp" class="card-text">{{team_stats.pk_percent}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-6"></div>
+        <!-- end of cards section -->
+      </div> <!-- end of left card column -->
+      <div class="col"><canvas id="rolling_xGF_chart"></canvas></div>
     </div>
+    <div class="row"><span>All stats are at 5v5 except obviously PP% and PK%</span></div>
+    <div class="row mb-2"><span>Data via: moneypuck.com</span></div>
     <div class="row mb-2">
-      <div class="col">
-        <div class="card scale-{{team_stats.xgf_rank}}">
-          <div class="card-header text-center">xGF</div>
-          <div class="card-body text-center">
-            <p id="xgf" class="card-text">{{team_stats.xgf}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.xga_rank}}">
-          <div class="card-header text-center">xGA</div>
-          <div class="card-body text-center">
-            <p id="xga" class="card-text">{{team_stats.xga}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.xgf_percent_rank}}">
-          <div class="card-header text-center">xGF%</div>
-          <div class="card-body text-center">
-            <p id="xgfp" class="card-text">{{team_stats.xgf_percent}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.gax_rank}}">
-          <div class="card-header text-center">GAx</div>
-          <div class="card-body text-center">
-            <p id="gax" class="card-text">{{team_stats.gax}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card scale-{{team_stats.gsax_rank}}">
-          <div class="card-header text-center">GSAx</div>
-          <div class="card-body text-center">
-            <p id="gsax" class="card-text">{{team_stats.gsax}}</p>
-          </div>
-        </div>
-      </div>
-      <!--
-      <div class="col">
-        <div class="card scale-{{team_stats.corsi_rank}}">
-          <div class="card-header text-center">CF%</div>
-          <div class="card-body text-center">
-            <p id="cfp" class="card-text">{{team_stats.corsi_percent}}</p>
-          </div>
-        </div>
-      </div>
-      -->
-      <div class="col"></div>
-      <div class="col-6"></div>
-    </div>
-    <div class="row">
       <div class="col"><button id="flipCardsButton" type="button" class="btn btn-primary" onclick="flipCards( {{team_stats}} )">Show Ranks</button></div>
       <div class="col"></div>
     </div>
-    {{team_stats}}
+
+
+    <!-- End cards section -->
+
+    <!-- hidden draw button -->
+    <div class="row mb-2" style="display:none">
+      <div class="col"><button id="drawTeamChartsButton" type="button" class="btn btn-primary" onclick="drawTeamCharts( {{team_stats}} )">Draw</button></div>
+      <div class="col"></div>
+    </div>
   </div>
 
 {% endblock %}

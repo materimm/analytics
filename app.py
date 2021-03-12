@@ -52,7 +52,6 @@ def league(league=None, team=None):
             return render_template('nhl_league.html', **locals())
         else:
             team_stats = nhl.get_team_stats(team, 2020)
-            print(str(team_stats))
             return render_template('nhl_team.html', **locals())
     elif league=='NFL':
         league_stats = nfl.get_team_stats()

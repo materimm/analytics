@@ -9,6 +9,7 @@ base_dir = str(Path(os.getcwd())) #.parents[0])
 # @param team - 3 letter code for team. aka BUF for the Buffalo Sabres
 def get_team_stats(team, season):
     team_filter = team
+    #for moneypuck teams that are 2 chars use a . in the middle aka NJ = N.J
     if len(team) == 2:
         team_filter = team[0] + '.' + team[1]
     data = help.upload_data(base_dir + '\\NHLData\\moneypuck\\overall\\teams-' + str(season) + '.csv')
@@ -27,6 +28,10 @@ def get_team_stats(team, season):
             penalites_against = r.get('penaltiesAgainst')
             gax = gf - xgf
             gsax = xga - ga
+            sf = r.get('shotsOnGoalFor')
+            sa = r.get('shotsOnGoalAgainst')
+            shooting_percent = round(gf/sf, 2)
+            save_percent = round(1 - (ga/sa), 2)
         elif r.get('situation')=='5on4':
             #power play
             pp_goals = r.get('goalsFor')
@@ -36,7 +41,7 @@ def get_team_stats(team, season):
             pk_goals = r.get('goalsAgainst')
 
     pp_percent = round(pp_goals/penalites_for, 2)
-    pk_percent = round(float(pk_goals/penalites_against), 2)
+    pk_percent = round(1 - (pk_goals/penalites_against), 2)
 
     five_v_five_data = data.loc[data.situation=='5on5']
 
@@ -64,6 +69,30 @@ def get_team_stats(team, season):
     corsis = five_v_five_data['corsiPercentage'].tolist()
     corsis.sort(reverse=True)
     corsi_rank = corsis.index(corsi_percent) + 1
+
+    #shooting percent rank
+    all_shots_for = five_v_five_data['shotsOnGoalFor'].tolist()
+    all_shooting_percent = []
+    for shots, agf in zip(all_shots_for, all_goals_for):
+        all_shooting_percent.append(round((agf/shots), 2))
+    all_shooting_percent.sort(reverse=True)
+    shooting_percent_rank = all_shooting_percent.index(shooting_percent) + 1
+
+    #save percent rank
+    all_shots_against = five_v_five_data['shotsOnGoalAgainst'].tolist()
+    all_save_percent = []
+    for shots, agf in zip(all_shots_for, all_goals_for):
+        all_save_percent.append(round(1 - (agf/shots), 2))
+    all_save_percent.sort(reverse=True)
+    save_percent_rank = all_save_percent.index(save_percent) + 1
+
+    #shots for rank
+    all_shots_for.sort(reverse=True)
+    sf_rank = all_shots_for.index(sf) + 1
+
+    #shots against rank
+    all_shots_against.sort()
+    sa_rank = all_shots_against.index(sa) + 1
 
     #expected goals for % rank
     xgf_percents = five_v_five_data['xGoalsPercentage'].tolist()
@@ -100,7 +129,7 @@ def get_team_stats(team, season):
         pp_percentages.append(round(goals/pens, 2))
     pk_percentages = []
     for goals, pens in zip(pk_goals, penalties_against):
-        pk_percentages.append(round(goals/pens, 2))
+        pk_percentages.append(round(1- (goals/pens), 2))
     pp_percentages.sort(reverse=True)
     pk_percentages.sort(reverse=True)
     pp_percent_rank = pp_percentages.index(pp_percent) + 1
@@ -108,6 +137,11 @@ def get_team_stats(team, season):
 
     return {
         'name': help.get_full_nhl_team_name(team),
+        'season': str(season) + " - "  + str(season + 1),
+        'logo': help.get_all_nhl_logos()[team],
+        'colors': help.get_all_nhl_colors()[team],
+        'rolling_xgf' : get_rolling_xGF(team, season, season),
+        #team card stats
         'gf': gf,
         'gf_rank': gf_rank,
         'ga': ga,
@@ -130,7 +164,14 @@ def get_team_stats(team, season):
         'gax_rank': gax_rank,
         'gsax': '%.2f' % (gsax),
         'gsax_rank': gsax_rank,
-        'logo': help.get_all_nhl_logos()[team]
+        'sf': sf,
+        'sf_rank': sf_rank,
+        'sa': sa,
+        'sa_rank': sa_rank,
+        'shooting_percent': shooting_percent * 100,
+        'shooting_percent_rank': shooting_percent_rank,
+        'save_percent': save_percent * 100,
+        'save_percent_rank': save_percent_rank
     }
 
 

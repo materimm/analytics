@@ -34,16 +34,18 @@ function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_f
     },
     plugins: {
       afterUpdate: chart => {
-        for(let i=0; i<datasets.length; i++) {
-          const img = new Image();
-          let l = datasets[i].label;
-          if(l ==  "Threshold Line") {
-            continue;
+        if(imgs != null) {
+          for(let i=0; i<datasets.length; i++) {
+            const img = new Image();
+            let l = datasets[i].label;
+            if(l ==  "Threshold Line") {
+              continue;
+            }
+            img.src = imgs[l];
+            img.width = 35;
+            img.height = (35/3) * 2;
+            chart.getDatasetMeta(i).data.forEach((d, j) => d._model.pointStyle = img);
           }
-          img.src = imgs[l];
-          img.width = 35;
-          img.height = (35/3) * 2;
-          chart.getDatasetMeta(i).data.forEach((d, j) => d._model.pointStyle = img);
         }
       }
     },
