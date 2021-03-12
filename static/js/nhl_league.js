@@ -1,10 +1,7 @@
-// $(document).ready(function() {
-//   console.log("HERE");
-//   let league_stats = $("#data").html();
-//   console.log(league_stats);
-//   console.log(typeof league_stats)
-//   drawCharts(league_stats);
-// });
+//draw charts on page load
+$(function () {
+  $("#drawLeagueChartsButton").click();
+});
 
 function drawCharts(league_stats) {
   let teams = league_stats.teams;
