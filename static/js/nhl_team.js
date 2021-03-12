@@ -10,7 +10,9 @@ function flipCards(team_stats) {
     document.getElementById("xgf").innerHTML = team_stats["xgf_rank"];
     document.getElementById("xga").innerHTML = team_stats["xga_rank"];
     document.getElementById("xgfp").innerHTML = team_stats["xgf_percent_rank"];
-    document.getElementById("cfp").innerHTML = team_stats["corsi_rank"];
+    document.getElementById("gax").innerHTML = team_stats["gax_rank"];
+    document.getElementById("gsax").innerHTML = team_stats["gsax_rank"];
+    //document.getElementById("cfp").innerHTML = team_stats["corsi_rank"];
   }
   else if(button.innerHTML == "Show Stats") {
     button.innerHTML = "Show Ranks";
@@ -22,6 +24,8 @@ function flipCards(team_stats) {
     document.getElementById("xgf").innerHTML = team_stats["xgf"];
     document.getElementById("xga").innerHTML = team_stats["xga"];
     document.getElementById("xgfp").innerHTML = team_stats["xgf_percent"];
-    document.getElementById("cfp").innerHTML = team_stats["corsi_percent"];
+    document.getElementById("gax").innerHTML = team_stats["gax"];
+    document.getElementById("gsax").innerHTML = team_stats["gsax"];
+    //document.getElementById("cfp").innerHTML = team_stats["corsi_percent"];
   }
 }

@@ -5,7 +5,8 @@ Playing around with sports analytics and visualization
 ## pages:  ##
 /league/NHL  
 /league/NFL  
-  
+/league/NHL/<team>  
+
 /nfl  
 /nhl_game  
 /nhl_team  
