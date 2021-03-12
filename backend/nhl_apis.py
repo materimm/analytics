@@ -152,7 +152,7 @@ def get_team_stats(team, season):
         'xgf_rank': xgf_rank,
         'xga': xga,
         'xga_rank': xga_rank,
-        'xgf_percent': xgf_percent,
+        'xgf_percent': xgf_percent * 100,
         'xgf_percent_rank': xgf_percent_rank,
         'corsi_percent': '%.2f' % (corsi_percent * 100),
         'corsi_rank': corsi_rank,
