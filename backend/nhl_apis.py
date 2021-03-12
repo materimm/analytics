@@ -146,13 +146,13 @@ def get_team_stats(team, season):
         'gf_rank': gf_rank,
         'ga': ga,
         'ga_rank': ga_rank,
-        'gf_percent': gf_percent,
+        'gf_percent': '%.2f' % (gf_percent),
         'gf_percent_rank': gf_percent_rank,
         'xgf': xgf,
         'xgf_rank': xgf_rank,
         'xga': xga,
         'xga_rank': xga_rank,
-        'xgf_percent': xgf_percent * 100,
+        'xgf_percent': '%.2f' % (xgf_percent * 100),
         'xgf_percent_rank': xgf_percent_rank,
         'corsi_percent': '%.2f' % (corsi_percent * 100),
         'corsi_rank': corsi_rank,
@@ -168,9 +168,9 @@ def get_team_stats(team, season):
         'sf_rank': sf_rank,
         'sa': sa,
         'sa_rank': sa_rank,
-        'shooting_percent': shooting_percent * 100,
+        'shooting_percent': '%.2f' % (shooting_percent * 100),
         'shooting_percent_rank': shooting_percent_rank,
-        'save_percent': save_percent * 100,
+        'save_percent': '%.2f' % (save_percent * 100),
         'save_percent_rank': save_percent_rank
     }
 
