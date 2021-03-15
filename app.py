@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for
 
 # API controllers
 import backend.nhl_apis as nhl
-import backend.nfl_apis as nfl
+import backend.nfl_apis as nfla
 
 # NHL imports
 import nhl_game_scraper as ngs
@@ -54,7 +54,7 @@ def league(league=None, team=None):
             team_stats = nhl.get_team_stats(team, 2020)
             return render_template('nhl_team.html', **locals())
     elif league=='NFL':
-        league_stats = nfl.get_team_stats()
+        league_stats = nfla.get_league_stats(2020)
         return render_template('nfl_league.html', **locals())
     else:
         return redirect(url_for('home'))
@@ -75,7 +75,7 @@ def radar():
 
 @app.route('/player_score', methods=['GET'])
 def player_score():
-    player_stats = api.get_player_stats()
+    player_stats = qbs.get_player_stats()
     return render_template('player_score.html', **locals())
 
 

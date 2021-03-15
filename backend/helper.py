@@ -3,7 +3,8 @@ import pandas as pd
 import os
 from pathlib import Path
 
-base_dir = str(Path(os.getcwd())) #str(Path(os.getcwd()).parents[0]) #
+base_dir = str(Path(os.getcwd()))
+#base_dir = str(Path(os.getcwd()).parents[0])
 
 #############
 #### NHL ####
@@ -45,18 +46,16 @@ def get_per_60(stat, toi):
 #### NFL ####
 #############
 def get_nfl_data(season):
-    cwd = os.getcwd()
     if season in list(range(1999, 2021)):
-        filepath = cwd + r"\NFLData\play_by_play_" + str(season) + ".csv.gz"
+        filepath = base_dir + r"\NFLData\play_by_play_" + str(season) + ".csv.gz"
         return pd.read_csv(filepath, compression='gzip', low_memory=False)
     else:
         print(str(season) + " not in data")
 
 
-def get_nfl_team_colors(team_name):
-    with open('./static/json/nfl_team_colors.json') as colors_file:
+def get_nfl_colors():
+    with open(base_dir + '/static/json/nfl_team_colors.json') as colors_file:
         colors = json.load(colors_file)
-    colors = colors[team_name]
     return colors
 
 ##############

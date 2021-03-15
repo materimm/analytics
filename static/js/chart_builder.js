@@ -248,15 +248,24 @@ function bar_chart(id, type, data, data_label, labels, colors, title, situation,
         datasets: [{
           data: data,
           backgroundColor: function(context) {
-              let index = context.dataIndex;
-              let len = colors.length - 1;
-              if(index > len) {
-                console.log(hexToRgbA(colors[len], 0.6));
-                return hexToRgbA(colors[len], 0.6);
-              }
-              return hexToRgbA(colors[index], 0.6);
+            let index = context.dataIndex;
+            let team = context.chart.config.data.labels[index];
+            return hexToRgbA(colors[team][0], 0.7);
           },
-          borderColor: colors,
+          // backgroundColor: function(context) {
+          //     let index = context.dataIndex;
+          //     let len = colors.length - 1;
+          //     if(index > len) {
+          //       console.log(hexToRgbA(colors[len], 0.6));
+          //       return hexToRgbA(colors[len], 0.6);
+          //     }
+          //     return hexToRgbA(colors[index], 0.6);
+          // },
+          borderColor: function(context) {
+            let index = context.dataIndex;
+            let team = context.chart.config.data.labels[index];
+            return hexToRgbA(colors[team][0], 1);
+          },
           borderWidth: 2,
           label: data_label
         }],
