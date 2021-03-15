@@ -54,8 +54,12 @@ def league(league=None, team=None):
             team_stats = nhl.get_team_stats(team, 2020)
             return render_template('nhl_team.html', **locals())
     elif league=='NFL':
-        league_stats = nfla.get_league_stats(2020)
-        return render_template('nfl_league.html', **locals())
+        if team==None:
+            league_stats = nfla.get_league_stats(2020)
+            return render_template('nfl_league.html', **locals())
+        else:
+            team_stats = nfla.get_team_stats(team, 2020)
+            return render_template('nfl_team.html', **locals())
     else:
         return redirect(url_for('home'))
 

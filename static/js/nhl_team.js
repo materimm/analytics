@@ -55,7 +55,7 @@ function drawRollingxGF(dates, xgf, name, colors, logo) {
   let new_dates = [];
   let data = [];
   for(let i=0; i<dates.length; i++) {
-    let d = new Date(dates[i])
+    let d = new Date(dates[i]);
     new_dates.push(d);
     data.push({
       x: d,
