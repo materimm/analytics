@@ -108,10 +108,10 @@ function drawGoalShare(goal_share, teams, colors, logos, isExpected) {
   let avg_x = goal_share["avg"]["gf60"];
   let avg_y = goal_share["avg"]["ga60"];
   if(isExpected) {
-    scatter_chart('xgoal_share_chart', scatterData, 'Expected Goal Share', '5v5', 'xGF/60', 'xGA/60', logos, avg_x, avg_y);
+    scatter_chart('xgoal_share_chart', scatterData, 'Expected Goal Share', '5v5', 'xGF/60', 'xGA/60', logos, avg_x, avg_y, 'moneypuck.com');
   }
   else {
-    scatter_chart('goal_share_chart', scatterData, 'Goal Share', '5v5', 'GF/60', 'GA/60', logos, avg_x, avg_y);
+    scatter_chart('goal_share_chart', scatterData, 'Goal Share', '5v5', 'GF/60', 'GA/60', logos, avg_x, avg_y, 'moneypuck.com');
   }
 
 }

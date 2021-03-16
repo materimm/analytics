@@ -190,13 +190,16 @@ def get_league_stats(start_season, end_season, filter='all'):
     all_dates.sort()
     rolling_xgf['all_dates'] = all_dates
 
+    seasons = start_season if start_season == end_season else str(start_season) + ' - ' + str(end_season)
+
     return {
         'rolling_xgf': rolling_xgf,
         'goal_share': goal_share,
         'xgoal_share': xgoal_share,
         'colors': help.get_all_nhl_colors(),
         'logos': help.get_all_nhl_logos(),
-        'teams': teams
+        'teams': teams,
+        'season': seasons
     }
 
 
@@ -225,7 +228,6 @@ def get_goal_share(teams, start_season, end_season, is_expected):
     data = pd.DataFrame()
     for season in seasons:
         data = data.append(help.upload_data(base_dir + r'\NHLData\moneypuck\overall\teams-' + str(season) + '.csv'))
-
     data = data.loc[(data.season >= start_season)  & (data.season <= end_season)]
     data = data.loc[data.situation=='5on5']
     data = data.groupby(['team'], as_index=False).agg({gf_label:'mean', ga_label:'mean', 'iceTime': 'sum'})

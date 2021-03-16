@@ -133,7 +133,7 @@ function line_chart_with_point_labels(id, labels, datasets, title, situation ,xA
 }
 
 
-function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, avg_y) {
+function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, avg_y, data_from) {
   let ctx = document.getElementById(id).getContext("2d");
   let scatter = new Chart(ctx, {
       type: 'scatter',
@@ -185,7 +185,7 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, 
           display: true,
           text: [title,
                 'situations: ' + situation,
-                'data: Natural Stat Trick (@natstattrick) | chart: @moman939'],
+                'data: ' + data_from + ' | chart: @moman939'],
         },
         scales: {
           xAxes: [{
