@@ -42,7 +42,7 @@ def get_team_stats(team, season):
 
 
     return {
-        'name': help.get_full_nhl_team_name(team),
+        'name': help.get_full_nfl_team_name(team),
         'logo': help.get_nfl_team_logo(team),
         'season': season,
         'colors': help.get_nfl_colors()[team],

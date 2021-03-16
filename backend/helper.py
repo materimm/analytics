@@ -58,7 +58,7 @@ def get_nfl_colors():
         colors = json.load(colors_file)
     return colors
 
-def get_full_nhl_team_name(abbrev):
+def get_full_nfl_team_name(abbrev):
     with open(base_dir + '/static/json/nfl_abbrev_to_full.json') as teams_file:
         teams = json.load(teams_file)
     return teams[abbrev]

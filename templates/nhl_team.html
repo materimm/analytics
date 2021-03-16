@@ -8,7 +8,10 @@
   <link href="{{ url_for('static', filename='css/cards.css') }}" rel="stylesheet">
 {% endblock %}
 {% block content %}
-  <div class="container">
+
+{% include 'nhl_teams_nav.html' %}
+
+  <div class="container mt-3">
     <!-- Card section header -->
     <div class="row mb-3">
       <div class="col-2"><img src="{{team_stats.logo}}"/></div>

@@ -3,6 +3,9 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
+
+{% include 'nhl_teams_nav.html' %}
+
   <div class="container">
     <div class="row mb-1">
       <h1>NHL {{league_stats.season}} Data</h1>
