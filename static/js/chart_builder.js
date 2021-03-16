@@ -51,6 +51,9 @@ function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_f
     },
     options: {
       title: {
+        fontSize: 15,
+        fontFamily: "Roboto Mono",
+        fontColor: "#000000",
         display: true,
         text: [title,
               'situations: ' + situation,
@@ -63,75 +66,6 @@ function line_chart(id, labels, datasets, title, situation ,xAxis, yAxis, data_f
     }
   });
 }
-
-function line_chart_with_point_labels(id, labels, datasets, title, situation ,xAxis, yAxis, data_from) {
-  //show all tooltips for single game xGF% charts
-  Chart.plugins.register({
-    beforeRender: function(chart) {
-      if (chart.config.options.showAllTooltips) {
-        // create an array of tooltips,
-        // we can't use the chart tooltip because there is only one tooltip per chart
-        chart.pluginTooltips = [];
-        chart.config.data.datasets.forEach(function(dataset, i) {
-          chart.getDatasetMeta(i).data.forEach(function(sector, j) {
-            chart.pluginTooltips.push(new Chart.Tooltip({
-              _chart: chart.chart,
-              _chartInstance: chart,
-              _data: chart.data,
-              _options: chart.options.tooltips,
-              _active: [sector]
-            }, chart));
-          });
-        });
-        chart.options.tooltips.enabled = false; // turn off normal tooltips
-      }
-    },
-    afterDraw: function(chart, easing) {
-      if (chart.config.options.showAllTooltips) {
-        if (!chart.allTooltipsOnce) {
-          if (easing !== 1) {
-            return;
-          }
-          chart.allTooltipsOnce = true;
-        }
-        chart.options.tooltips.enabled = true;
-        Chart.helpers.each(chart.pluginTooltips, function(tooltip) {
-          tooltip.initialize();
-          tooltip.update();
-          tooltip.pivot();
-          tooltip.transition(easing).draw();
-        });
-        chart.options.tooltips.enabled = false;
-      }
-    }
-  });
-
-  let ctx = document.getElementById(id).getContext("2d");
-  let lineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: datasets,
-    },
-    options: {
-      title: {
-        display: true,
-        text: [title,
-              'situations: ' + situation,
-              'data: ' + data_from + ' | chart: @moman939'],
-      },
-      scales: {
-        xAxes: [xAxis],
-        yAxes: [yAxis]
-      },
-      showAllTooltips: true,
-      legend: {
-        display: false
-      }
-    }
-  });
-}
-
 
 function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, avg_y, data_from) {
   let ctx = document.getElementById(id).getContext("2d");
@@ -150,21 +84,15 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, 
           var midX = xScale.getPixelForValue(avg_x);
           var midY = yScale.getPixelForValue(avg_y);
 
-          // Top left quadrant
-          ctx.fillStyle = "rgba(184, 203, 233, 1)";
-          ctx.fillRect(chartArea.left, chartArea.top, midX - chartArea.left, midY - chartArea.top);
+          ctx.fillStyle = "rgb(0,0,0)";
+          ctx.fillRect(midX-1, chartArea.top, 3, chartArea.bottom - chartArea.top);
+          ctx.fillRect(chartArea.left, midY-1, chartArea.right - chartArea.left, 3);
 
-          // Top right quadrant
-          ctx.fillStyle = "rgba(89, 138, 197, 1)";
-          ctx.fillRect(midX, chartArea.top, chartArea.right - midX, midY - chartArea.top);
-
-          // Bottom right quadrant
-          ctx.fillStyle = "rgba(250, 220, 222, 1)";
-          ctx.fillRect(midX, midY, chartArea.right - midX, chartArea.bottom - midY);
-
-          // Bottom left quadrant
-          ctx.fillStyle = "rgba(248, 105, 111, 1)";
-          ctx.fillRect(chartArea.left, midY, midX - chartArea.left, chartArea.bottom - midY);
+          ctx.font = "20px Roboto";
+          ctx.fillText("Low Event", chartArea.left + 30, chartArea.top + 30);
+          ctx.fillText("2-way Dominance", chartArea.right - 150, chartArea.top + 30);
+          ctx.fillText("Pain", chartArea.left + 30, chartArea.bottom - 30);
+          ctx.fillText("High Event", chartArea.right - 150, chartArea.bottom - 30);
         },
         afterUpdate: chart => {
           for(let i=0; i<data.datasets.length; i++) {
@@ -183,6 +111,9 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, 
         },
         title: {
           display: true,
+          fontSize: 15,
+          fontFamily: "Roboto Mono",
+          fontColor: "#000000",
           text: [title,
                 'situations: ' + situation,
                 'data: ' + data_from + ' | chart: @moman939'],

@@ -85,8 +85,7 @@ function drawRollingxGF(rolling_xGF_objs, teams, colors, logos) {
 }
 
 function drawGoalShare(goal_share, teams, colors, logos, isExpected) {
-  let datasets = []
-
+  let datasets = [];
   for(let i=0; i<teams.length; i++) {
       let t = teams[i];
       let goal_share_obj = goal_share[t];
@@ -101,7 +100,6 @@ function drawGoalShare(goal_share, teams, colors, logos, isExpected) {
         backgroundColor: colors[t][0],
         data: [data]
       });
-
   }
 
   let scatterData = {datasets};
