@@ -12,7 +12,7 @@ def get_team_stats(team, season):
     #for moneypuck teams that are 2 chars use a . in the middle aka NJ = N.J
     if len(team) == 2:
         team_filter = team[0] + '.' + team[1]
-    data = help.upload_data(base_dir + '\\NHLData\\moneypuck\\overall\\teams-' + str(season) + '.csv')
+    data = help.upload_data(base_dir + '\\NHLData\\moneypuck\\teams\\' + str(season) + '-' + str(season+1) + '-teams.csv')
     team_data = data.loc[data.team==team_filter]
     for index, row in team_data.iterrows():
         r = row.to_dict()
@@ -227,7 +227,7 @@ def get_goal_share(teams, start_season, end_season, is_expected):
     seasons = list(range(start_season, end_season + 1))
     data = pd.DataFrame()
     for season in seasons:
-        data = data.append(help.upload_data(base_dir + r'\NHLData\moneypuck\overall\teams-' + str(season) + '.csv'))
+        data = data.append(help.upload_data(base_dir + '\\NHLData\\moneypuck\\teams\\' + str(season) + '-' + str(season+1) + '-teams.csv'))
     data = data.loc[(data.season >= start_season)  & (data.season <= end_season)]
     data = data.loc[data.situation=='5on5']
     data = data.groupby(['team'], as_index=False).agg({gf_label:'mean', ga_label:'mean', 'iceTime': 'sum'})
