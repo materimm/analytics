@@ -15,7 +15,8 @@ function drawCharts(league_stats) {
             colors,
             'Expected Points Added',
             'Regular Season | Season: ' + league_stats.season,
-            'NFLFastR');
+            'NFLFastR',
+            epa.logos);
   bar_chart('cpoe_chart',
             'bar',
             cpoe.cpoe,
@@ -24,5 +25,6 @@ function drawCharts(league_stats) {
             colors,
             'Completion Percentage Over Expected',
             'Regular Season | Season: ' + league_stats.season,
-            'NFLFastR');
+            'NFLFastR',
+            cpoe.logos);
 }

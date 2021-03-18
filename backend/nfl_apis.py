@@ -6,6 +6,9 @@ def get_league_stats(season):
     data = _filter_df(data)
     epa_obj = _get_stat_mean_by_team(data, 'epa')
     cpoe_obj = _get_stat_mean_by_team(data, 'cpoe')
+    logos = help.get_all_nfl_logos()
+    epa_obj['logos'] = _get_logos_as_array(epa_obj.get('teams'), logos)
+    cpoe_obj['logos'] = _get_logos_as_array(cpoe_obj.get('teams'), logos)
     return {
         'season': season,
         'epa': epa_obj,
@@ -39,11 +42,9 @@ def get_team_stats(team, season):
     rush_data = rush_data.loc[rush_data.play_type=='run']
     rush_epa, rush_epa_rank = _get_stat_and_rank(_get_stat_mean_by_team(rush_data, 'epa'), 'epa', team)
 
-
-
     return {
         'name': help.get_full_nfl_team_name(team),
-        'logo': help.get_nfl_team_logo(team),
+        'logo': help.get_all_nfl_logos().get(team),
         'season': season,
         'colors': help.get_nfl_colors()[team],
         'game_data': game_data,
@@ -94,7 +95,18 @@ def _filter_df(df):
     return df
 
 
+def _get_logos_as_array(teams, logos):
+    arr = []
+    for t in teams:
+        arr.append({
+            'src': logos.get(t),
+            'width': 20,
+            'height': 20
+        })
+    return arr
+
+
 # if __name__ == '__main__':
-#     r = get_league_stats(2020)
+#     #r = get_league_stats(2020)
 #     r = get_team_stats('BUF', 2020)
-#     print(str(r.get('game_data')))
+#     print(str(r))

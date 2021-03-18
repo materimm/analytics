@@ -63,9 +63,10 @@ def get_full_nfl_team_name(abbrev):
         teams = json.load(teams_file)
     return teams[abbrev]
 
-def get_nfl_logos():
-    data = upload_data(base_dir + '/NFLData/team_logos.csv')
-    return data
+def get_all_nfl_logos():
+    with open(base_dir + '/static/json/nfl_logos.json') as logos_file:
+        logos = json.load(logos_file)
+    return logos
 
 def get_nfl_team_logo(team_code):
     data = get_nfl_logos()

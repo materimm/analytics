@@ -172,7 +172,7 @@ function doughnut(id, data, data_label, labels, colors, title, situation) {
     let doughnut = new Chart(ctx, config);
 }
 
-function bar_chart(id, type, data, data_label, labels, colors, title, situation, data_from) {
+function bar_chart(id, type, data, data_label, labels, colors, title, situation, data_from, logos) {
   let config = {
       type: type,
       data: {
@@ -203,6 +203,18 @@ function bar_chart(id, type, data, data_label, labels, colors, title, situation,
         labels: labels,
       },
       options: {
+        plugins: {
+          labels: {
+            render: 'image',
+            textMargin: 10,
+            images: logos
+          }
+        },
+        layout: {
+          padding: {
+            top: 30
+          }
+        },
         responsive: true,
         legend: {
           position: 'top',
