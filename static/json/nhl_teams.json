@@ -1,0 +1,12 @@
+{
+  "all" : ["ANA", "ARI", "BOS", "BUF", "CGY", "CAR",
+    "COL", "CBJ", "CHI", "DAL", "DET", "EDM", "FLA",
+    "LA", "MIN", "MTL", "NSH", "NJ", "NYI", "NYR",
+    "OTT", "PHI", "PIT", "STL", "SJ", "TB",
+    "TOR", "VAN", "VGK", "WSH", "WPG"],
+
+  "north": ["CGY", "EDM", "MTL", "OTT", "TOR", "VAN", "WPG"],
+  "east": ["BOS", "BUF", "NJ", "NYI", "NYR", "PHI", "PIT", "WSH"],
+  "west": ["ANA", "ARI", "COL", "LA", "MIN", "STL", "SJ", "VGK"],
+  "central": ["CAR", "CBJ", "CHI", "DAL", "DET", "FLA", "NSH", "TB"]
+}

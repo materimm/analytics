@@ -1,10 +1,12 @@
-from flask import Flask, jsonify, request, render_template
-import api_controller as api
+from flask import Flask, jsonify, request, render_template, redirect, url_for
+
+# API controllers
+import backend.nhl_apis as nhl
+import backend.nfl_apis as nfla
+
 # NHL imports
 import nhl_game_scraper as ngs
-import nhl_teams as nhlt
 import nhl_single_game as nhlsg
-import nhl_single_team as nhlst
 import nhl_skater as nhlsk
 
 #NFL imports
@@ -12,11 +14,56 @@ import nfl_qbs as qbs
 
 
 
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return redirect(url_for('home'))
+
+@app.route('/home')
+def home():
     return render_template('home.html', **locals())
+
+############
+# API Plan #
+############
+# /team/<league>/<team>
+
+# /league/<league> (maybe make conference and division on page filters)
+
+# /players/<league>
+# /players/<league>/<player>
+# /players/<league>/<team>
+# /players/<league>/<position>
+
+# /matchup/<league>/<game> (figure some idea for the game param to identify specific games)
+
+
+
+@app.route('/league/<league>', methods=['GET'], defaults={'team': None})
+@app.route('/league/<league>/<team>', methods=['GET'])
+def league(league=None, team=None):
+    if league is None:
+        return redirect(url_for('home'))
+    if league=='NHL':
+        if team==None:
+            league_stats = nhl.get_league_stats(2020, 2020)
+            return render_template('nhl_league.html', **locals())
+        else:
+            team_stats = nhl.get_team_stats(team, 2020)
+            return render_template('nhl_team.html', **locals())
+    elif league=='NFL':
+        if team==None:
+            league_stats = nfla.get_league_stats(2020)
+            return render_template('nfl_league.html', **locals())
+        else:
+            team_stats = nfla.get_team_stats(team, 2020)
+            return render_template('nfl_team.html', **locals())
+    else:
+        return redirect(url_for('home'))
+
+
 
 
 @app.route('/pdo', methods=['GET'])
@@ -32,7 +79,7 @@ def radar():
 
 @app.route('/player_score', methods=['GET'])
 def player_score():
-    player_stats = api.get_player_stats()
+    player_stats = qbs.get_player_stats()
     return render_template('player_score.html', **locals())
 
 

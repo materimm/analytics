@@ -1,0 +1,7 @@
+p {
+  font-weight: bold;
+}
+
+span, p {
+  font-family: 'Roboto', sans-serif;
+}

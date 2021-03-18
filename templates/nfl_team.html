@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/color_scale.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/cards.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+{% include 'nfl_teams_nav.html' %}
+
+  <div class="container mt-3">
+    <!-- Card section header -->
+    <div class="row mb-3">
+      <div class="col-2"><img src="{{team_stats.logo}}"/></div>
+      <div class="col">
+        <div class="row">
+          <h1><span>{{team_stats.name}}</span></h1>
+        </div>
+        <div class="row"><span>Season: {{team_stats.season}}</span></div>
+      </div>
+      <div class="col-5"></div>
+    </div>
+
+
+    <div class="row mb-2">
+      <!-- Card section -->
+      <div class="col">
+        <!-- top row of cards -->
+        <div class="row mb-2">
+          <div class="col">
+            <div class="card scale-{{team_stats.epa_rank}}">
+              <div class="card-header text-center"><span>EPA</span></div>
+              <div class="card-body text-center">
+                <p id="epa" class="card-text">{{team_stats.epa}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.cpoe_rank}}">
+              <div class="card-header text-center"><span>CPOE</span></div>
+              <div class="card-body text-center">
+                <p id="cpoe" class="card-text">{{team_stats.cpoe}}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.pass_epa_rank}}">
+              <div class="card-header text-center"><span>Passing EPA</span></div>
+              <div class="card-body text-center">
+                <p id="pepa" class="card-text">{{team_stats.pass_epa}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card scale-{{team_stats.rush_epa_rank}}">
+              <div class="card-header text-center"><span>Rushing EPA</span></div>
+              <div class="card-body text-center">
+                <p id="repa" class="card-text">{{team_stats.rush_epa}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- end of cards section -->
+      </div> <!-- end of left card column -->
+      <div class="col"><canvas id="epa_per_game_chart"></canvas></div>
+    </div>
+    <div class="row"><span>All stats are regular season only</span></div>
+    <div class="row mb-2"><span>Data via: NFLFastR</span></div>
+    <div class="row mb-2">
+      <div class="col"><button id="flipCardsButton" type="button" class="btn btn-primary" onclick="flipCards( {{team_stats}} )">Show Ranks</button></div>
+      <div class="col"></div>
+    </div>
+
+
+    <!-- End cards section -->
+
+    <!-- hidden draw button -->
+    <div class="row mb-2" style="display:none">
+      <div class="col"><button id="drawTeamChartsButton" type="button" class="btn btn-primary" onclick="drawTeamCharts( {{team_stats}} )">Draw</button></div>
+      <div class="col"></div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/nfl_team.js') }}"></script>
+{% endblock %}
