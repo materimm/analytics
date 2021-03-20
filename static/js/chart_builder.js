@@ -88,7 +88,7 @@ function scatter_chart(id, data, title, situation, xLabel, yLabel, imgs, avg_x, 
           ctx.fillRect(midX-1, chartArea.top, 3, chartArea.bottom - chartArea.top);
           ctx.fillRect(chartArea.left, midY-1, chartArea.right - chartArea.left, 3);
 
-          ctx.font = "20px Roboto";
+          ctx.font = "20px Roboto Mono";
           ctx.fillText("Low Event", chartArea.left + 30, chartArea.top + 30);
           ctx.fillText("2-way Dominance", chartArea.right - 150, chartArea.top + 30);
           ctx.fillText("Pain", chartArea.left + 30, chartArea.bottom - 30);

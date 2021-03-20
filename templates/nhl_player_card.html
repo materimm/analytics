@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/color_scale.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/cards.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+{% include 'nhl_teams_nav.html' %}
+
+  <div class="container mt-3">
+    <!-- Card section header -->
+    <div class="row mb-3 pb-2 border-bottom">
+      <div class="col-2"><img src="{{player_card.player_info.logo}}"/></div>
+      <div class="col">
+        <div class="row">
+          <h1><span>{{player_card.player_info.name}}</span></h1>
+        </div>
+        <div class="row">
+          <h4><span>Season: {{player_card.player_info.season}}</span></h4>
+          <div class="col ml-5">
+            <div class="row">Age: {{player_card.player_info.age}}</div>
+            <div class="row">Position: {{player_card.player_info.position}}</div>
+          </div>
+          <div class="col-3">
+            <div class="row">Contract: {{player_card.player_info.term}} years x {{player_card.player_info.cap_hit}}</div>
+            <div class="row">Games Played: {{player_card.player_info.gp}}</div>
+          </div>
+          <div class="col">
+            <div class="row">Goals: {{player_card.player_info.goals}}</div>
+            <!-- <div class="row">Assists: {{player_card.player_info.assists}}</div> -->
+            <div class="row">Points: {{player_card.player_info.points}}</div>
+          </div>
+          <div class="col-2">
+            <div class="row">Primary Assists: {{player_card.player_info.a1}}</div>
+            <div class="row">Secondary Assists: {{player_card.player_info.a2}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">5v5 Offense</div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col">5v5 Defense</div>
+      <div class="col"></div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.gf_color}}">
+          <div class="card-header text-center"><span>GF/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.gf_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.xgf_color}}">
+          <div class="card-header text-center"><span>xGF/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.xgf_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.xgf_percent_color}}">
+          <div class="card-header text-center"><span>xGF%</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.xgf_percent_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.ga_color}}">
+          <div class="card-header text-center"><span>GA/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.ga_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.xga_color}}">
+          <div class="card-header text-center"><span>xGA/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.xga_percentile}}</p>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end row -->
+
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.ixgf_color}}">
+          <div class="card-header text-center"><span>ixGF/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.ixgf_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.shooting_percent_color}}">
+          <div class="card-header text-center"><span>SH%</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.shooting_percent_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.corsi_color}}">
+          <div class="card-header text-center"><span>CF%</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.corsi_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.blocks_color}}">
+          <div class="card-header text-center"><span>Blocks/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.blocks_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.hits_color}}">
+          <div class="card-header text-center"><span>Hits/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.hits_percentile}}</p>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end row -->
+
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.goals_color}}">
+          <div class="card-header text-center"><span>G/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.goals_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.a1_color}}">
+          <div class="card-header text-center"><span>A1/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.a1_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.even.a2_color}}">
+          <div class="card-header text-center"><span>A2/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.even.a2_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div> <!-- end row -->
+
+    <div class="row mb-2">
+      <div class="col">Special Teams</div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pp.gf_color}}">
+          <div class="card-header text-center"><span>PP GF/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pp.gf_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pp.xgf_color}}">
+          <div class="card-header text-center"><span>PP xGF/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pp.xgf_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pp.ixgf_color}}">
+          <div class="card-header text-center"><span>PP ixGF/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pp.ixgf_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pp.goals_color}}">
+          <div class="card-header text-center"><span>PP G/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pp.goals_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col">
+          <div class="card" style="background-color:{{player_card.pp.assists_color}}">
+            <div class="card-header text-center"><span>PP A/60</span></div>
+            <div class="card-body text-center">
+              <p id="gf" class="card-text">{{player_card.pp.assists_percentile}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end row -->
+
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pk.ga_color}}">
+          <div class="card-header text-center"><span>PK GA/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pk.ga_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pk.xga_color}}">
+          <div class="card-header text-center"><span>PK xGA/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pk.xga_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background-color:{{player_card.pk.blocks_color}}">
+          <div class="card-header text-center"><span>PK Blocks/60</span></div>
+          <div class="card-body text-center">
+            <p id="gf" class="card-text">{{player_card.pk.blocks_percentile}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div> <!-- end row -->
+
+    <div class="col">
+      <div class="row"><span>All stats are displayed as the percentile.</span></div>
+      <div class="row mb-2"><span>Data via: moneypuck.com</span></div>
+    </div>
+
+  </div> <!-- end container -->
+
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Custom JavaScript -->
+
+{% endblock %}

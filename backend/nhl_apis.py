@@ -3,8 +3,16 @@ from pathlib import Path
 import os
 import backend.helper as help
 
+######################
+##  API End Points  ##
+##------------------##
+## get_team_stats   ##
+## get_league_stats ##
+## get_player_card  ##
+######################
 
-base_dir = str(Path(os.getcwd())) #.parents[0])
+base_dir = str(Path(os.getcwd()))
+#base_dir = str(Path(os.getcwd()).parents[0])
 
 # @param team - 3 letter code for team. aka BUF for the Buffalo Sabres
 def get_team_stats(team, season):
@@ -203,6 +211,280 @@ def get_league_stats(start_season, end_season, filter='all'):
     }
 
 
+def get_player_card(player, season):
+    colors = help.get_color_gradient(finish_hex="#ffffff", n=50) + help.get_color_gradient(start_hex="#ffffff", n=50)
+    cap_data = help.upload_data(base_dir + '\\NHLData\\nhl_cap.csv')
+    name_split = player.split(' ')
+    cap_data = cap_data.loc[cap_data.name==name_split[1] + ', ' + name_split[0]]
+    for index, row in cap_data.iterrows():
+        r = row.to_dict()
+        position = r.get('position')
+        age = r.get('age')
+        cap_hit = r.get('cap_hit')
+        term_remaining = r.get('term_remaining')
+        team_code = r.get('team_code')
+    player_obj = {
+        'name': player,
+        'season': str(season) + ' - ' + str(season+1),
+        'team': help.get_full_nhl_team_name(team_code),
+        'logo': help.get_all_nhl_logos()[team_code],
+        'age': age,
+        'position': position,
+        'cap_hit': cap_hit,
+        'term': term_remaining,
+    }
+
+    path = base_dir + '\\NHLData\\moneypuck\\skaters\\{}-{}-skaters.csv'
+    path = path.format(season, season+1)
+    data = help.upload_data(path)
+
+    #------all situations ---------------
+    all_situtions = data.copy()
+    all_situtions = all_situtions.loc[(all_situtions.name==player) & (all_situtions.situation=='all')]
+    for index, row in all_situtions.iterrows():
+        r = row.to_dict()
+        #rounding to remove decimal
+        player_obj['points'] = round(r.get('I_F_points'))
+        player_obj['goals'] = round(r.get('I_F_goals'))
+        player_obj['assists'] = round(r.get('I_F_primaryAssists') + r.get('I_F_secondaryAssists'))
+        player_obj['a1'] = round(r.get('I_F_primaryAssists'))
+        player_obj['a2'] = round(r.get('I_F_secondaryAssists'))
+        player_obj['gp'] = round(r.get('games_played'))
+
+    #------ 5v5 ---------------
+    five_v_five_data = data.copy()
+    five_v_five_data = data.loc[data.situation=='5on5']
+
+    # l prefix means whole league
+    l_toi = five_v_five_data['icetime'].tolist()
+    l_on_ice_gf = five_v_five_data['OnIce_F_goals'].tolist()
+    l_on_ice_xgf = five_v_five_data['OnIce_F_xGoals'].tolist()
+    l_xgf_percent = five_v_five_data['onIce_xGoalsPercentage'].tolist()
+    l_on_ice_ga = five_v_five_data['OnIce_A_goals']
+    l_on_ice_xga = five_v_five_data['OnIce_A_xGoals'].tolist()
+    l_ixgf = five_v_five_data['I_F_xGoals'].tolist()
+    l_shots = five_v_five_data['I_F_shotsOnGoal'].tolist()
+    l_corsi = five_v_five_data['onIce_corsiPercentage'].tolist()
+    l_blocks = five_v_five_data['shotsBlockedByPlayer'].tolist()
+    l_hits = five_v_five_data['I_F_hits'].tolist()
+    l_goals = five_v_five_data['I_F_goals'].tolist()
+    l_a1 = five_v_five_data['I_F_primaryAssists'].tolist()
+    l_a2 = five_v_five_data['I_F_secondaryAssists'].tolist()
+
+    l_gf_60, l_xgf_60, l_ga_60, l_xga_60, l_ixgf_60 = [], [], [], [], []
+    l_blocks_60, l_hits_60, l_goals_60, l_a1_60, l_a2_60 = [], [], [], [], []
+    l_shooting_percent = []
+    for toi, gf, xgf, ga, xga, ixgf, b, h, g, a1, a2, sh in zip(l_toi, l_on_ice_gf,
+      l_on_ice_xgf, l_on_ice_ga, l_on_ice_xga, l_ixgf, l_blocks, l_hits,
+      l_goals, l_a1, l_a2, l_shots):
+        l_gf_60.append(help.get_per_60(gf, toi))
+        l_xgf_60.append(help.get_per_60(xgf, toi))
+        l_ga_60.append(help.get_per_60(ga, toi))
+        l_xga_60.append(help.get_per_60(xga, toi))
+        l_ixgf_60.append(help.get_per_60(ixgf, toi))
+        l_blocks_60.append(help.get_per_60(b, toi))
+        l_hits_60.append(help.get_per_60(h, toi))
+        l_goals_60.append(help.get_per_60(g, toi))
+        l_a1_60.append(help.get_per_60(a1, toi))
+        l_a2_60.append(help.get_per_60(a2, toi))
+        l_shooting_percent.append(0 if sh==0 else round((g/sh)*100, 2))
+
+    five_v_five_data = five_v_five_data.loc[five_v_five_data.name==player]
+    for index, row in five_v_five_data.iterrows():
+        r = row.to_dict()
+        toi = r.get('icetime')
+        gf_60 = help.get_per_60(r.get('OnIce_F_goals'), toi)
+        xgf_60 = help.get_per_60(r.get('OnIce_F_xGoals'), toi)
+        xgf_percent = r.get('onIce_xGoalsPercentage')
+        ga_60 = help.get_per_60(r.get('OnIce_A_goals'), toi)
+        xga_60 = help.get_per_60(r.get('OnIce_A_xGoals'), toi)
+        ixgf_60 = help.get_per_60(r.get('I_F_xGoals'), toi)
+        shots = r.get('I_F_shotsOnGoal')
+        corsi = r.get('onIce_corsiPercentage')
+        blocks_60 = help.get_per_60(r.get('shotsBlockedByPlayer'), toi)
+        hits_60 = help.get_per_60(r.get('I_F_hits'), toi)
+        goals = r.get('I_F_goals')
+        a1_60 = help.get_per_60(r.get('I_F_primaryAssists'), toi)
+        a2_60 = help.get_per_60(r.get('I_F_secondaryAssists'), toi)
+        shooting_percent = 0 if shots==0 else round((goals/shots)*100, 2)
+        goals_60 = help.get_per_60(goals, toi)
+
+    gf_percentile = help.get_percentile(l_gf_60, gf_60)
+    xgf_percentile = help.get_percentile(l_xgf_60, xgf_60)
+    xgf_percent_percentile = help.get_percentile(l_xgf_percent, xgf_percent)
+    ga_percentile = help.get_percentile(l_ga_60, ga_60, True)
+    xga_percentile = help.get_percentile(l_xga_60, xga_60, True)
+    ixgf_percentile = help.get_percentile(l_ixgf_60, ixgf_60)
+    shooting_percent_percentile = help.get_percentile(l_shooting_percent, shooting_percent)
+    corsi_percentile = help.get_percentile(l_corsi, corsi)
+    blocks_percentile = help.get_percentile(l_blocks_60, blocks_60)
+    hits_percentile = help.get_percentile(l_hits_60, hits_60)
+    goals_percentile = help.get_percentile(l_goals_60, goals_60)
+    a1_percentile = help.get_percentile(l_a1_60, a1_60)
+    a2_percentile = help.get_percentile(l_a2_60, a2_60)
+
+    even_obj = {
+        'gf_percentile': gf_percentile,
+        'gf_color': _get_percentile_color(colors, gf_percentile),
+        'xgf_percentile': xgf_percentile,
+        'xgf_color': _get_percentile_color(colors, xgf_percentile),
+        'xgf_percent_percentile': xgf_percent_percentile,
+        'xgf_percent_color': _get_percentile_color(colors, xgf_percent_percentile),
+        'ga_percentile': ga_percentile,
+        'ga_color': _get_percentile_color(colors, ga_percentile),
+        'xga_percentile': xga_percentile,
+        'xga_color': _get_percentile_color(colors, xga_percentile),
+        'ixgf_percentile': ixgf_percentile,
+        'ixgf_color': _get_percentile_color(colors, ixgf_percentile),
+        'shooting_percent_percentile': shooting_percent_percentile,
+        'shooting_percent_color': _get_percentile_color(colors, shooting_percent_percentile),
+        'corsi_percentile': corsi_percentile,
+        'corsi_color': _get_percentile_color(colors, corsi_percentile),
+        'blocks_percentile': blocks_percentile,
+        'blocks_color': _get_percentile_color(colors, blocks_percentile),
+        'hits_percentile': hits_percentile,
+        'hits_color': _get_percentile_color(colors, hits_percentile),
+        'goals_percentile': goals_percentile,
+        'goals_color': _get_percentile_color(colors, goals_percentile),
+        'a1_percentile': a1_percentile,
+        'a1_color': _get_percentile_color(colors, a1_percentile),
+        'a2_percentile': a2_percentile,
+        'a2_color': _get_percentile_color(colors, a2_percentile)
+    }
+
+    pp_data = data.copy()
+    pp_data = data.loc[data.situation=='5on4']
+    l_toi = pp_data['icetime'].tolist()
+    l_on_ice_gf = pp_data['OnIce_F_goals'].tolist()
+    l_on_ice_xgf = pp_data['OnIce_F_xGoals'].tolist()
+    l_ixgf = pp_data['I_F_xGoals'].tolist()
+    l_goals = pp_data['I_F_goals'].tolist()
+    l_a1 = pp_data['I_F_primaryAssists']
+    l_a2 = pp_data['I_F_secondaryAssists']
+
+    l_gf_60, l_xgf_60, l_ixgf_60, l_goals_60, l_assists_60 = [], [], [], [], []
+    for toi, gf, xgf, ixgf, g, a1, a2 in zip(l_toi, l_on_ice_gf, l_on_ice_xgf, l_ixgf, l_goals, l_a1, l_a2):
+        if toi==0:
+            l_gf_60.append(0)
+            l_xgf_60.append(0)
+            l_ixgf_60.append(0)
+            l_goals_60.append(0)
+            l_assists_60.append(0)
+        else:
+            l_gf_60.append(help.get_per_60(gf, toi))
+            l_xgf_60.append(help.get_per_60(xgf, toi))
+            l_ixgf_60.append(help.get_per_60(ixgf, toi))
+            l_goals_60.append(help.get_per_60(g, toi))
+            l_assists_60.append(help.get_per_60(a1 + a2, toi))
+
+    pp_data = pp_data.loc[pp_data.name==player]
+    for index, row in pp_data.iterrows():
+        r = row.to_dict()
+        toi = r.get('icetime')
+        if toi != 0:
+            gf_60 = help.get_per_60(r.get('OnIce_F_goals'), toi)
+            xgf_60 = help.get_per_60(r.get('OnIce_F_xGoals'), toi)
+            ixgf_60 = help.get_per_60(r.get('I_F_xGoals'), toi)
+            goals_60 = help.get_per_60(r.get('I_F_goals'), toi)
+            a1 = r.get('I_F_primaryAssists')
+            a2 = r.get('I_F_secondaryAssists')
+            assists_60 = help.get_per_60(a1 + a2, toi)
+
+    if toi != 0:
+        gf_percentile = help.get_percentile(l_gf_60, gf_60)
+        xgf_percentile = help.get_percentile(l_xgf_60, xgf_60)
+        ixgf_percentile = help.get_percentile(l_ixgf_60, ixgf_60)
+        goals_percentile = help.get_percentile(l_goals_60, goals_60)
+        assists_percentile = help.get_percentile(l_assists_60, assists_60)
+
+        pp_obj = {
+            'gf_percentile': gf_percentile,
+            'gf_color': _get_percentile_color(colors, gf_percentile),
+            'xgf_percentile': xgf_percentile,
+            'xgf_color': _get_percentile_color(colors, xgf_percentile),
+            'ixgf_percentile': ixgf_percentile,
+            'ixgf_color': _get_percentile_color(colors, ixgf_percentile),
+            'goals_percentile': goals_percentile,
+            'goals_color': _get_percentile_color(colors, goals_percentile),
+            'assists_percentile': assists_percentile,
+            'assists_color': _get_percentile_color(colors, assists_percentile),
+        }
+    else:
+        pp_obj = {
+            'gf_percentile': 'N/A',
+            'gf_color': "#ffffff",
+            'xgf_percentile': 'N/A',
+            'xgf_color': "#ffffff",
+            'ixgf_percentile': 'N/A',
+            'ixgf_color': "#ffffff",
+            'goals_percentile': 'N/A',
+            'goals_color': "#ffffff",
+            'assists_percentile': 'N/A',
+            'assists_color': "#ffffff",
+        }
+
+    pk_data = data.copy()
+    pk_data = data.loc[data.situation=='4on5']
+    l_toi = pk_data['icetime'].tolist()
+    l_on_ice_ga = pk_data['OnIce_A_goals'].tolist()
+    l_on_ice_xga = pk_data['OnIce_A_xGoals'].tolist()
+    l_blocks = pk_data['shotsBlockedByPlayer'].tolist()
+
+    l_ga_60, l_xga_60, l_blocks_60 = [], [], []
+    for toi, ga, xga, b in zip(l_toi, l_on_ice_ga, l_on_ice_xga, l_blocks):
+        if toi==0:
+            l_ga_60.append(0)
+            l_xga_60.append(0)
+            l_blocks_60.append(0)
+        else:
+            l_ga_60.append(help.get_per_60(ga, toi))
+            l_xga_60.append(help.get_per_60(xga, toi))
+            l_blocks_60.append(help.get_per_60(b, toi))
+
+    pk_data = pk_data.loc[pk_data.name==player]
+    for index, row in pk_data.iterrows():
+        r = row.to_dict()
+        toi = r.get('icetime')
+        if toi != 0:
+            ga_60 = help.get_per_60(r.get('OnIce_A_goals'), toi)
+            xga_60 = help.get_per_60(r.get('OnIce_A_xGoals'), toi)
+            blocks_60 = help.get_per_60(r.get('shotsBlockedByPlayer'), toi)
+
+    if toi != 0:
+        ga_percentile = help.get_percentile(l_ga_60, ga_60, True)
+        xga_percentile = help.get_percentile(l_xga_60, xga_60, True)
+        blocks_percentile = help.get_percentile(l_blocks_60, blocks_60)
+
+        pk_obj = {
+            'ga_percentile': ga_percentile,
+            'ga_color': _get_percentile_color(colors, ga_percentile),
+            'xga_percentile': xga_percentile,
+            'xga_color': _get_percentile_color(colors, xga_percentile),
+            'blocks_percentile': blocks_percentile,
+            'blocks_color': _get_percentile_color(colors, blocks_percentile),
+        }
+    else:
+        pk_obj = {
+            'ga_percentile': 'N/A',
+            'ga_color': "#ffffff",
+            'xga_percentile': 'N/A',
+            'xga_color': "#ffffff",
+            'blocks_percentile': 'N/A',
+            'blocks_color': "#ffffff",
+        }
+
+    return {
+        'player_info': player_obj,
+        'even': even_obj,
+        'pp': pp_obj,
+        'pk': pk_obj,
+    }
+
+def _get_percentile_color(colors, percentile):
+    if percentile != 0:
+        percentile = percentile - 1
+    return colors[percentile]
+
 def get_rolling_xGF(team, start_season, end_season):
     game_data = help.upload_data(base_dir + '\\NHLData\\moneypuck\\games\\' + team + '.csv')
     game_data = game_data.loc[(game_data.season >= start_season)  & (game_data.season <= end_season)]
@@ -262,4 +544,5 @@ def get_goal_share(teams, start_season, end_season, is_expected):
 #if __name__ == '__main__':
     #r = get_league_stats(2019, 2020)
     #r = get_team_stats('BUF', 2020)
-    #print(str(r))
+    # r = get_player_card('Connor McDavid', 2020)
+    # print(str(r))

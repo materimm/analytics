@@ -98,10 +98,11 @@ def _filter_df(df):
 def _get_logos_as_array(teams, logos):
     arr = []
     for t in teams:
+        w, h = help.get_image_resizes(logos.get(t), 20, 30)
         arr.append({
             'src': logos.get(t),
-            'width': 20,
-            'height': 20
+            'width': w,
+            'height': h
         })
     return arr
 

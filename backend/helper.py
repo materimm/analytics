@@ -2,6 +2,8 @@ import json
 import pandas as pd
 import os
 from pathlib import Path
+from PIL import Image
+from urllib.request import urlopen
 
 base_dir = str(Path(os.getcwd()))
 #base_dir = str(Path(os.getcwd()).parents[0])
@@ -39,7 +41,7 @@ def get_teams(key):
 
 
 def get_per_60(stat, toi):
-    return round((stat*60)/toi, 2)
+    return (stat*60)/toi
 
 
 #############
@@ -75,6 +77,17 @@ def get_nfl_team_logo(team_code):
 ##############
 #### Both ####
 ##############
+def get_percentile(arr, x, r=False):
+    arr.sort(reverse=r)
+    index = arr.index(x)
+    return round((index/len(arr)) * 100)
+
+def get_image_resizes(src, max_width, max_height):
+    img = Image.open(urlopen(src))
+    w, h = img.size
+    ratio = min(max_width/w, max_height/h)
+    return w*ratio, h*ratio
+
 def upload_data(file_path):
     data = pd.read_csv(file_path)
     return data;
@@ -93,3 +106,37 @@ def get_5_game_rolling_average(arr):
             rolling_avg.append(round(sum(queue)/(i+1), 2))
         i += 1
     return rolling_avg
+
+
+def hex_to_RGB(hex):
+    ''' "#FFFFFF" -> [255,255,255] '''
+    # Pass 16 to the integer function for change of base
+    return [int(hex[i:i+2], 16) for i in range(1,6,2)]
+
+def RGB_to_hex(RGB):
+      ''' [255,255,255] -> "#FFFFFF" '''
+      # Components need to be integers for hex to make sense
+      RGB = [int(x) for x in RGB]
+      return "#"+"".join(["0{0:x}".format(v) if v < 16 else
+                "{0:x}".format(v) for v in RGB])
+
+
+def get_color_gradient(start_hex="#F52933", finish_hex="#4075B5", n=32):
+    # Starting, middle and ending colors in RGB form
+    s = hex_to_RGB(start_hex)
+    m = hex_to_RGB("#ffffff")
+    f = hex_to_RGB(finish_hex)
+    # Initilize a list of the output colors with the starting color
+    RGB_list = [s]
+    half = round(n/2)
+    # Calcuate a color at each evenly spaced value of t from 1 to half
+    for t in range(1, n):
+        # Interpolate RGB vector for color at the current value of t
+        curr_vector = [
+            int(s[j] + (float(t)/(n-1))*(f[j]-s[j]))
+            for j in range(3)
+        ]
+        # Add it to our list of output colors
+        RGB_list.append(curr_vector)
+
+    return [RGB_to_hex(RGB) for RGB in RGB_list]

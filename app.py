@@ -38,6 +38,8 @@ def home():
 # /players/<league>/<position>
 
 # /matchup/<league>/<game> (figure some idea for the game param to identify specific games)
+# /players/compare
+# /playerCards/<league>/<player>
 
 
 
@@ -64,7 +66,36 @@ def league(league=None, team=None):
         return redirect(url_for('home'))
 
 
+@app.route('/playerCards/<league>/<player>', methods=['GET'])
+def player_cards(league=None, player=None):
+    if league is None or player==None:
+        return redirect(url_for('home'))
+    if league=='NHL':
+        player_card = nhl.get_player_card(player, 2020)
+        return render_template('nhl_player_card.html', **locals())
+    elif league=='NFL':
+        player_card = nfla.get_player_card(player, 2020)
+        return render_template('nfl_player_card.html', **locals())
+    else:
+        return redirect(url_for('home'))
 
+
+@app.route('/players/<league>', methods=['GET'])
+def players(league=None):
+    if league is None:
+        return redirect(url_for('home'))
+    if league=='NHL':
+        players = nhl.get_players(2020)
+        return render_template('nhl_players.html', **locals())
+    elif league=='NFL':
+        players = nfla.get_players(2020)
+        return render_template('nfl_players.html', **locals())
+    else:
+        return redirect(url_for('home'))
+
+
+#-------------------------------------
+# old
 
 @app.route('/pdo', methods=['GET'])
 def pdo():

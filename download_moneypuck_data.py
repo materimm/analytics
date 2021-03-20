@@ -14,7 +14,7 @@ for team in teams:
     open('./NHLData/moneypuck/games/' + team + '.csv', 'wb').write(r.content)
 
 
-seasons = list(range(2008, 2021))
+seasons = list(range(2020, 2021))
 data_type = ['skaters', 'goalies', 'lines', 'teams']
 url = 'http://moneypuck.com/moneypuck/playerData/seasonSummary/{}/regular/{}.csv'
 path = './NHLData/moneypuck/{}/{}-{}-{}.csv'
