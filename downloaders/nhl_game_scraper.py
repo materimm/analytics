@@ -221,10 +221,10 @@ def scrape_events_HTM(game_id_fun, season_id_fun, attempts=3):
             url_events_HTM = url_events_HTM.decode('utf8').replace("'", '"')
         except Exception as e:
             print(e)
-            print("ERROR: Event download for " + url + " failed.")
+            print("ERROR: HTM event download for " + url + " failed.")
 
     soup = BeautifulSoup(url_events_HTM, 'html.parser')
-    events_body_text = soup.find_all(class_ ='bborder')
+    events_body_text = soup.find_all(class_ ='bborder') ##evolvingwild return this
     ## TODO ----------
     # add in home and away teams names
     # add in score at time of event
@@ -329,7 +329,7 @@ def scrape_events_HTM(game_id_fun, season_id_fun, attempts=3):
 
 
 ## Scrape Events (API)
-def scrape_events_api(game_id_fun, attempts=3):
+def scrape_events_API(game_id_fun, attempts=3):
     url_events_api = None
     try_count = attempts
 
@@ -344,7 +344,7 @@ def scrape_events_api(game_id_fun, attempts=3):
             url_events_api = url_events_api.decode('utf8')
         except Exception as e:
             print(e)
-            print("ERROR: Event download for " + url + " failed.")
+            print("ERROR: API event download for " + url + " failed.")
 
     events_json = json.loads(url_events_api)
     #TODO format
@@ -367,7 +367,7 @@ def scrape_events_ESPN(date, attempts=3):#game_id_fun, season_id_fun, game_info_
             url_espn_page = url_espn_page.decode('utf8')
         except Exception as e:
             print(e)
-            print("ERROR: Event download for " + url + " failed.")
+            print("ERROR: ESPN event download for " + url + " failed.")
 
     ## Get game ids
     espn_game_ids = list(map(lambda x: x.removeprefix('boxscore/_/gameId/'), re.findall("boxscore/_/gameId/[0-9]+", url_espn_page)))
@@ -380,18 +380,156 @@ def scrape_events_ESPN(date, attempts=3):#game_id_fun, season_id_fun, game_info_
     f.close()
     espn_teams = list(map(lambda x: x.removeprefix('/nhl/team/_/name/').split('/')[1].replace('-', ' ').upper(), list(set(re.findall("/nhl/team/_/name/[a-z]+/[a-z-]+", str(espn_container))))))
 
+    #part_team_names TODO
+
+
     if len(espn_game_ids) > 0:
         espn_games_df = pd.DataFrame()
 
         #### TODO ###
 
+## Scrape Shifts (HTM)
+def scrape_shifts(game_id_fun, season_id_fun, attempts=3):
+    url_home_shifts = None
+    try_count = attempts
+
+    while (not isinstance(url_home_shifts, str)) and try_count > 0:
+        try:
+            try_count = try_count - 1
+            url = "http://www.nhl.com/scores/htmlreports/{}/TH0{}.HTM"
+            url = url.format(season_id_fun, game_id_fun[6:10])
+            url_home_shifts = urllib.request.urlopen(url).read()
+            # Decode UTF-8 bytes to Unicode
+            url_home_shifts = url_home_shifts.decode('utf8')
+        except Exception as e:
+            print(e)
+            print("ERROR: Home shift download for " + url + " failed.")
+
+    url_away_shifts = None
+    try_count = attempts
+
+    while (not isinstance(url_away_shifts, str)) and try_count > 0:
+        try:
+            try_count = try_count - 1
+            url = "http://www.nhl.com/scores/htmlreports/{}/TV0{}.HTM"
+            url = url.format(season_id_fun, game_id_fun)
+            url_away_shifts = urllib.request.urlopen(url).read()
+            # Decode UTF-8 bytes to Unicode
+            url_away_shifts = url_home_shifts.decode('utf8')
+        except Exception as e:
+            print(e)
+            print("ERROR: Away shift download for " + url + " failed.")
+
+    ## Pull out scraped shifts data
+    home_soup = BeautifulSoup(url_home_shifts, 'html.parser')
+    away_soup = BeautifulSoup(url_away_shifts, 'html.parser')
+    home_shifts_titles = home_soup.find( class_ = '.border')
+    away_shifts_titles = away_soup.find( class_ = '.border')
+    home_shifts_text = soup.find( class_ = '.bborder')
+    away_shifts_text = soup.find( class_ = '.bborder')
+
+    return {
+        'home_shifts_titles': home_shifts_titles,
+        'away_shifts_titles': away_shifts_titles,
+        'home_shifts_text': home_shifts_text,
+        'away_shifts_text': away_shifts_text
+    }
 
 
+## Scrape Shifts (API)
+def scrape_shifts_API(game_id_fun, attempts=3):
+    url_shifts = None
+    try_count = attempts
+
+    while (not isinstance(url_shifts, str)) and try_count > 0:
+        try:
+            try_count = try_count - 1
+            url = "http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId={}"
+            url = url.format(game_id_fun)
+            url_shifts = urllib.request.urlopen(url).read()
+            # Decode UTF-8 bytes to Unicode
+            url_shifts = url_shifts.decode('utf8')
+        except Exception as e:
+            print(e)
+            print("ERROR: Shift download for " + url + " failed.")
+
+    if isinstance(url_shifts, str):
+        shifts_list = json.loads(url_shifts)
+    else:
+        shifts_list = {}
+
+    return shifts_list
+
+
+## Scrape Rosters
+def scrape_rosters(game_id_fun, season_id_fun, attempts=3):
+    url_rosters = None
+    try_count = attempts
+
+    while (not isinstance(url_rosters, str)) and try_count > 0:
+        try:
+            try_count = try_count - 1
+            url = "http://www.nhl.com/scores/htmlreports/{}/RO0{}.HTM"
+            url = url.format(season_id_fun, game_id_fun)
+            url_rosters = urllib.request.urlopen(url).read()
+            # Decode UTF-8 bytes to Unicode
+            url_rosters = url_rosters.decode('utf8')
+        except Exception as e:
+            print(e)
+            print("ERROR: Roster download for " + url + " failed.")
+
+    ## Pull out roster data
+    soup = BeautifulSoup(url_rosters, 'html.parser')
+    rosters_text = [x.text for x in soup.find_all('td')]
+    #TODO maybe return as json?
+    return rosters_text
+
+
+
+## Scrape Rosters API
+#def scrape_rosters_API(games_data, cores):
+    #TODO
+
+
+## Scrape Event Summary
+def scrape_event_summary(game_id_fun, season_id_fun, attempts=3):
+    url_event_summary = None
+    try_count = attempts
+
+    while (not isinstance(url_event_summary, str)) and try_count > 0:
+        try:
+            try_count = try_count - 1
+            url = "http://www.nhl.com/scores/htmlreports/{}/ES0{}.HTM"
+            url = url.format(season_id_fun, game_id_fun[6:10])
+            url_rosters = urllib.request.urlopen(url).read()
+            # Decode UTF-8 bytes to Unicode
+            url_event_summary = url_event_summary.decode('utf8')
+        except Exception as e:
+            print(e)
+            print("ERROR: Event download for " + url + " failed.")
+
+    ## Pull out roster data
+    soup = BeautifulSoup(url_event_summary, 'html.parser')
+    event_summary_text = [x.text for x in soup.find_all('td')]
+    return event_summary_text
+
+
+
+## ---------------------------- ##
+##   Create Basic Data Frames   ##
+## ---------------------------- ##
+
+## Create Game Information data.frame
+def game_info(game_id_fun, season_id_fun, events_data, roster_data):
+
+    ## Find coaches
+    coach_index = 1 #Todo
 
 #scrape_schedule('2018-10-03', '2018-10-03')
 #scrape_events_HTM(20001, 20182019)
 #scrape_events_api(2018020001)
-scrape_events_ESPN(20181003)
+#scrape_events_ESPN(20181003)
+scrape_rosters(20001,20182019)
 
 
 ## --------------------- ##
@@ -412,7 +550,7 @@ def scrape_game(game_id, season_id, scrape_type_, live_scrape_):
 
     ## Scrape events - API
     if scrape_type_ == "full":
-        events_api = scrape_events_API(game_id_fun=game_id, attempts=3))
+        events_api = scrape_events_API(game_id_fun=game_id, attempts=3)
 
     ## Scrape rosters
     rosters_HTM = scrape_rosters(game_id_fun=game_id, season_id_fun=season_id, attempts=3)
@@ -429,7 +567,7 @@ def scrape_game(game_id, season_id, scrape_type_, live_scrape_):
     game_info_df = game_info(game_id_fun=game_id, season_id_fun=season_id, events_data=events_HTM, roster_data=rosters_HTM)
 
     ## Scrape API for shits data if HTM source fails
-    if len(shifts_data_scrape['home_shifts_text']) == 0 || len(shifts_data_scrape['away_shifts_text']) == 0:
+    if (len(shifts_data_scrape['home_shifts_text']) == 0) or (len(shifts_data_scrape['away_shifts_text']) == 0):
         shifts_data_scrape = shifts_process_API(game_id_fun=game_id, game_info_data=game_info_df)
         HTM_shifts_okay = False
     else:
@@ -497,15 +635,15 @@ def scrape_game(game_id, season_id, scrape_type_, live_scrape_):
                 coord_type = "ESPN"
             else: ## COORDINATES NOT AVAILABLE
                 events_full_df = prepare_events_HTM_df
-                events_full_df['coords_x'] = events_full_df['coords_x'].apply(lambda x: x = "NA")
-                events_full_df['coords_y'] = events_full_df['coords_y'].apply(lambda x: x = "NA")
-                events_full_df['event_description_alt'] = events_full_df['event_description_alt'].apply(lambda x: x = "NA")
+                events_full_df['coords_x'] = events_full_df['coords_x'].apply(lambda x: "NA")
+                events_full_df['coords_y'] = events_full_df['coords_y'].apply(lambda x: "NA")
+                events_full_df['event_description_alt'] = events_full_df['event_description_alt'].apply(lambda x: "NA")
                 coord_type = "NO COORDS"
         else: ## COORDINATES NOT AVAILABLE
             events_full_df = prepare_events_HTM_df
-            events_full_df['coords_x'] = events_full_df['coords_x'].apply(lambda x: x = "NA")
-            events_full_df['coords_y'] = events_full_df['coords_y'].apply(lambda x: x = "NA")
-            events_full_df['event_description_alt'] = events_full_df['event_description_alt'].apply(lambda x: x = "NA")
+            events_full_df['coords_x'] = events_full_df['coords_x'].apply(lambda x: "NA")
+            events_full_df['coords_y'] = events_full_df['coords_y'].apply(lambda x: "NA")
+            events_full_df['event_description_alt'] = events_full_df['event_description_alt'].apply(lambda x: "NA")
             coord_type = "NO COORDS"
 
         ## -------------------- ##
@@ -517,10 +655,21 @@ def scrape_game(game_id, season_id, scrape_type_, live_scrape_):
                                     roster_data=rosters_list['roster_df'], game_info_data = game_info_df)
 
         ## Finalize PBP Data
-        pbp_finalize_list = pbp_finalize(pbp_data=pbp_combine_list['pbp_final'], on_data_home=pbp_combine_list'[is_on_df_home]',
-                                        on_data_away=pbp_combine_list'[is_on_df_away]', roster_data=rosters_list['roster_df'],
+        pbp_finalize_list = pbp_finalize(pbp_data=pbp_combine_list['pbp_final'], on_data_home=pbp_combine_list['is_on_df_home'],
+                                        on_data_away=pbp_combine_list['is_on_df_away'], roster_data=rosters_list['roster_df'],
                                         game_info_data=game_info_df, live_scrape=live_scrape_)
 
         ## Modify game_info_df to return
+        game_info_df_return = game_info_df
+        #TODO match mutate for coord_source, period count, etc. (line 3580)
 
-        ##TODO ---------------
+        ## Ensure database friendly column names
+        #TODO
+
+        ## Return all data as a list
+        #TODO
+
+        #...
+
+        ## Return data
+        return return_list
