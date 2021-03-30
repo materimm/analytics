@@ -20,6 +20,7 @@ flask
 requests
 bs4
 selenium  
+pickle  
 
 ## To start server:  ##
 set FLASK_APP=app.py

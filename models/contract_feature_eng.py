@@ -130,6 +130,7 @@ def format_contract_info():
     contracts_df['is_winger'] = contracts_df.apply(lambda row: get_is_player_position(row, 'W'), axis=1)
     contracts_df['is_defenseman'] = contracts_df.apply(lambda row: get_is_player_position(row, 'D'), axis=1)
     #contracts_df['is_goalie'] = contracts_df.apply(lambda row: get_is_player_position(row, 'G'), axis=1)
+    contracts_df['cap_hit_percentage_at_signing'] = contracts_df['cap_hit_percentage_at_signing'].apply(lambda x: x/100)
 
     contracts_df = contracts_df.loc[contracts_df.type != 'ENTRY-LEVEL CONTRACT']
     contracts_df.drop('current_age', axis=1, inplace=True)
@@ -158,7 +159,7 @@ def format_contract_info():
 
     contracts_df.to_csv('features.csv', encoding='utf-8-sig', index=False)
 
-#format_contract_info()
+format_contract_info()
 
 
 def plot_histo():
@@ -210,19 +211,19 @@ def binning():
 
 
 def get_age_bin(row, bin):
-    # Age bins: <23, 23-27, 28-30, 30-35, >35
+    # Age bins: <23, 23-27, 28-30, 31-35, >35
     age = row['age_at_signing']
     if bin == 1:
         if age < 23:
             return 1
     elif bin == 2:
-        if age < 28:
+        if (age < 28) & (age > 22):
             return 1
     elif bin == 3:
-        if age < 31:
+        if (age > 27) & (age < 31):
             return 1
     elif bin == 4:
-        if age < 36:
+        if (age > 30) & (age < 36):
             return 1
     elif bin == 5:
         if age > 35:
@@ -235,38 +236,38 @@ def get_goals_assists_bin(row, stat, prev, bin):
     if stat == 'goals':
         g = row['prev_' + prev + '_' + stat]
         if bin == 1:
-            if g < 10:
+            if g <= 9:
                 return 1
         elif bin == 2:
-            if g < 20:
+            if (g >= 10) & (g <= 19):
                 return 1
         elif bin == 3:
-            if g < 30:
+            if (g >= 20) & (g <=29):
                 return 1
         elif bin == 4:
-            if g >= 40:
+            if g >= 30:
                 return 1
 
     # Assists bins: 0-9, 10-19, 20-29, 30-49, >=50
-    if stat == 'goals':
-        g = row['prev_' + prev + '_' + stat]
+    if stat == 'assists':
+        a = row['prev_' + prev + '_' + stat]
         if bin == 1:
-            if g < 10:
+            if a <= 9:
                 return 1
         elif bin == 2:
-            if g < 20:
+            if (a >= 10) & (a<=19):
                 return 1
         elif bin == 3:
-            if g < 30:
+            if (a >= 20) & (a<=29):
                 return 1
         elif bin == 4:
-            if g < 49:
+            if (a >= 30) & (a<=49):
                 return 1
         elif bin == 5:
-            if g >= 50:
+            if (a >= 50):
                 return 1
 
     return 0
 
-
+#format_contract_info()
 binning()
