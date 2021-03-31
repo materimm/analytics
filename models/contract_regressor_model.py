@@ -7,6 +7,8 @@ import os
 import pandas as pd
 import pickle
 
+import contract_feature_eng as cfe
+
 
 def get_data():
     base_dir = str(Path(os.getcwd()).parents[0])
@@ -37,8 +39,8 @@ def gbr_grid_search():
 
 
 def gbr_model():
-    x, y = get_data()
-    xtrain, xtest, ytrain, ytest=train_test_split(x, y, random_state=12, test_size=0.15)
+    features, labels = get_data()
+    xtrain, xtest, ytrain, ytest=train_test_split(features, labels, random_state=12, test_size=0.15)
     # with new parameters
     gbr = GradientBoostingRegressor(n_estimators=500,
         max_depth=3,
@@ -49,7 +51,7 @@ def gbr_model():
     save_model(gbr, 'contract_gbr.sav')
 
     counter = 0
-    for x, y in zip(x.columns.values.tolist(), gbr.feature_importances_):
+    for x, y in zip(features.columns.values.tolist(), gbr.feature_importances_):
         print(str(counter) + '- ' + x + ': ' + str(y))
         counter = counter + 1
     # plot
@@ -126,13 +128,15 @@ def load_model(filename):
 def get_predicted_contract(name):
     salary_cap = 81500000
     gbr = load_model('contract_gbr.sav')
-    x, _ = get_data()
-    x = x.iloc[[0]]
-    print(str(x))
-    pred = gbr.predict(x)
-    print(str(pred))
+    data = cfe.get_player_features(name)
+    pred = gbr.predict(data)
+    contract = round(salary_cap * pred[0], 2)
+    contract = "$" + f"{contract:,}"
+    print(contract)
+    return contract
 
 #####################
 ###  Method Calls ###
 #####################
-get_predicted_contract('Jack Eichel')
+#gbr_model()
+get_predicted_contract('Tage Thompson')

@@ -50,12 +50,14 @@ def get_expiration(row):
     else:
         return 0
 
+
 def get_is_player_position(row, position):
     p = row['position']
     if position in p:
         return 1
     else:
         return 0
+
 
 def get_prev_3_years_stats(contracts_df, path):
     stats_dfs_obj = {}
@@ -116,7 +118,6 @@ def get_prev_3_years_stats(contracts_df, path):
     return stats_obj
 
 
-
 def format_contract_info():
     base_dir = str(Path(os.getcwd()).parents[0])
     contracts_df = pd.read_csv(base_dir + '\\NHLData\\all_contracts.csv')
@@ -154,12 +155,10 @@ def format_contract_info():
     contracts_df['prev_2_corsi'] = stats_obj['p2_corsi']
     contracts_df['prev_3_corsi'] = stats_obj['p3_corsi']
     contracts_df['prev_1_sh'] = stats_obj['p1_sh']
-    contracts_df['prev_1_sh'] = stats_obj['p1_sh']
-    contracts_df['prev_1_sh'] = stats_obj['p1_sh']
+    contracts_df['prev_2_sh'] = stats_obj['p1_sh']
+    contracts_df['prev_3_sh'] = stats_obj['p1_sh']
 
     contracts_df.to_csv('features.csv', encoding='utf-8-sig', index=False)
-
-format_contract_info()
 
 
 def plot_histo():
@@ -174,9 +173,12 @@ def plot_histo():
         plt.title(l)
         plt.show()
 
-def binning():
-    base_dir = str(Path(os.getcwd()).parents[0])
-    features = pd.read_csv(base_dir + '\\NHLData\\features.csv')
+
+def binning(features):
+    if features is None:
+        base_dir = str(Path(os.getcwd()).parents[0])
+        features = pd.read_csv(base_dir + '\\NHLData\\features.csv')
+
     for i in ['1', '2', '3']:
         features['prev_' + i + '_goals_bin_0-9'] = features.apply(lambda row: get_goals_assists_bin(row, 'goals', i, 1), axis=1)
         features['prev_' + i + '_goals_bin_10-19'] = features.apply(lambda row: get_goals_assists_bin(row, 'goals', i, 2), axis=1)
@@ -205,9 +207,10 @@ def binning():
     features.drop('signing_date', axis=1, inplace=True)
     features.drop('age_at_signing', axis=1, inplace=True)
     #pretty sure this matters more for term
-    features.drop('expires_as_ufa', axis=1, inplace=True)
+    #features.drop('expires_as_ufa', axis=1, inplace=True)
 
-    features.to_csv('features_bins.csv', encoding='utf-8-sig', index=False)
+    return features
+    #features.to_csv('features_bins.csv', encoding='utf-8-sig', index=False)
 
 
 def get_age_bin(row, bin):
@@ -230,6 +233,7 @@ def get_age_bin(row, bin):
             return 1
 
     return 0
+
 
 def get_goals_assists_bin(row, stat, prev, bin):
     # Goals bins: 0-9, 10-19, 20-29, >=30
@@ -269,5 +273,58 @@ def get_goals_assists_bin(row, stat, prev, bin):
 
     return 0
 
+
+def get_player_features(name):
+    base_dir = str(Path(os.getcwd()).parents[0])
+    player_df = pd.read_csv(base_dir + '\\NHLData\\all_contracts.csv')
+    player_df = player_df.loc[player_df.name==name]
+    player_df['signing_date'] = pd.to_datetime(player_df.signing_date)
+    player_df = player_df[player_df.signing_date == player_df.signing_date.max()]
+    player_df['is_ufa'] = 1 if player_df.iloc[0]['expiration_status'] == 'UFA' else 0
+    player_df['age_at_signing'] = player_df.iloc[0]['current_age']
+    player_df['is_center'] = player_df.apply(lambda row: get_is_player_position(row, 'C'), axis=1)
+    player_df['is_winger'] = player_df.apply(lambda row: get_is_player_position(row, 'W'), axis=1)
+    player_df['is_defenseman'] = player_df.apply(lambda row: get_is_player_position(row, 'D'), axis=1)
+    player_df.drop('current_age', axis=1, inplace=True)
+    player_df.drop('position', axis=1, inplace=True)
+    player_df.drop('type', axis=1, inplace=True)
+    player_df.drop('expiration_status', axis=1, inplace=True)
+    player_df.drop('cap_hit_percentage_at_signing', axis=1, inplace=True)
+
+    path = base_dir + '\\NHLData\\moneypuck\\skaters\\{}-{}-skaters.csv'
+    counter = 3
+    this_year = dt.date.today().year
+    for y in list(range(this_year-3, this_year)):
+        p = path.format(y, y+1)
+        stats_df = pd.read_csv(p)
+        stats_df = stats_df[['name', 'situation', 'I_F_goals', 'I_F_points', 'icetime',
+            'onIce_xGoalsPercentage', 'onIce_corsiPercentage', 'I_F_shotsOnGoal']]
+        stats_df = stats_df.loc[(stats_df.name==name) & (stats_df.situation=='all')]
+
+        if stats_df.empty:
+            player_df['prev_' + str(counter) + '_goals'] = 0
+            player_df['prev_' + str(counter) + '_assists'] = 0
+            player_df['prev_' + str(counter) + '_xgf'] = 0
+            player_df['prev_' + str(counter) + '_corsi'] = 0
+            player_df['prev_' + str(counter) + '_sh'] = 0
+            counter = counter - 1
+            continue
+
+        goals = stats_df['I_F_goals'].values[0]
+        player_df['prev_' + str(counter) + '_goals'] = goals
+        player_df['prev_' + str(counter) + '_assists'] = stats_df['I_F_points'].values[0] - goals
+        player_df['prev_' + str(counter) + '_xgf'] = stats_df['onIce_xGoalsPercentage'].values[0]
+        player_df['prev_' + str(counter) + '_corsi'] = stats_df['onIce_corsiPercentage'].values[0]
+        sog = stats_df['I_F_shotsOnGoal'].values[0]
+        sh = 0 if sog==0 else round(goals/sog, 4)
+        player_df['prev_' + str(counter) + '_sh'] = sh
+        counter = counter - 1
+
+    return binning(player_df)
+
+
+
 #format_contract_info()
-binning()
+#get_player_features('Jeff Skinner')
+#format_contract_info()
+#binning(None)
