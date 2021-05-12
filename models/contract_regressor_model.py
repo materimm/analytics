@@ -125,18 +125,21 @@ def load_model(filename):
     return pickle.load(open(filename, 'rb'))
 
 
-def get_predicted_contract(name):
+def get_predicted_contract(names):
     salary_cap = 81500000
     gbr = load_model('contract_gbr.sav')
-    data = cfe.get_player_features(name)
-    pred = gbr.predict(data)
-    contract = round(salary_cap * pred[0], 2)
-    contract = "$" + f"{contract:,}"
-    print(contract)
-    return contract
+    contracts = []
+    for n in names:
+        data = cfe.get_player_features(n)
+        pred = gbr.predict(data)
+        contract = round(salary_cap * pred[0], 2)
+        contracts.append(contract)
+        contract = "$" + f"{contract:,}"
+        print(n + ': ' + contract)
+    return contracts
 
 #####################
 ###  Method Calls ###
 #####################
 #gbr_model()
-get_predicted_contract('Tage Thompson')
+get_predicted_contract(['Scott Laughton'])
