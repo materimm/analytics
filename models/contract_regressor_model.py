@@ -142,4 +142,4 @@ def get_predicted_contract(names):
 ###  Method Calls ###
 #####################
 #gbr_model()
-get_predicted_contract(['Scott Laughton'])
+get_predicted_contract(['Michael Mcleod', 'Janne Kuokkanen', 'Yegor Sharangovich'])
